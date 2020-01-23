@@ -205,7 +205,15 @@ document.addEventListener('DOMContentLoaded', function() {
   setInterval(function() {
     var date = new Date();
     // var date = curr_date - start_date;
-    var hours = (date.getHours() - start_hours + 24) % 24, minutes = (date.getMinutes() - start_minutes + 60) % 60, seconds = (60 + date.getSeconds() - start_seconds) % 60;
+    var hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds();
+    if (minutes < start_minutes)
+    	hours=hours-1;
+    if (seconds < start_seconds)
+    	minutes=minutes-1;
+    console.log(seconds + ' ' + start_seconds + ' ' + minutes);
+    hours = (hours - start_hours + 24) % 24;
+    minutes = (minutes - start_minutes + 60) % 60;
+    seconds = (60 + seconds - start_seconds) % 60;
 
     setNumber(_hours[0], Math.floor(hours/10), 1);
     setNumber(_hours[1], hours%10, 1);
