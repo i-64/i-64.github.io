@@ -10,13 +10,13 @@
     <div id="cont-left">
         <h3>Mrunal Ahire</h3>
         <br>
-        <div class="menu-item"><a href="#cont-right">Home</a><br></div>
-        <div class="menu-item"><a href="#work-ex">Work Experience</a><br></div>
-        <div class="menu-item"><a href="#education">Education</a><br></div>
-        <div class="menu-item"><a href="#projects">Projects</a><br></div>
+        <div class="menu-item"><a href="#cont-right">Home</a></div>
+        <div class="menu-item"><a href="#work-ex">Work Experience</a></div>
+        <div class="menu-item"><a href="#education">Education</a></div>
+        <div class="menu-item"><a href="#projects">Projects</a></div>
         <div class="menu-item"><a href="https://i-64.github.io/resume.pdf">Resume</a></div>
-        <div class="menu-item"><a href="#cp">Competitive</a><br></div>
-        <div class="menu-item"><a href="#contact">Contact</a><br></div>
+        <div class="menu-item"><a href="#cp">Competitive</a></div>
+        <div class="menu-item"><a href="#contact">Contact</a></div>
     </div>
     <div id="cont-right">
         <h1>Mrunal Ahire</h1>
@@ -122,6 +122,7 @@
         #cont-right {
             height: fit-content;
             padding-left: 15px;
+            padding-right: 15px;
             overflow: hidden;
             width: 60%;
         }
@@ -150,9 +151,37 @@
         a:visited {
             color: #0000EE;
         }
+        @media only screen and (max-width:620px) {
+            /* For mobile phones: */
+            #cont-right {
+                width: auto;
+            }
+            #cont-left {
+                /* padding: 0px;
+                margin: 0px;
+                width: fit-content;
+                float: left; */
+                /* height: 0px; */
+                padding-left: 10px;
+                padding-right: 10px;
+                display: none;
+                /* visibility: hidden; */
+            }
+            /* .menu-item {
+                height: 0px;
+            } */
+        }
     </style>
     <script type="text/javascript">
-        document.getElementById('cont-left').style.height = document.getElementById('cont-right').clientHeight + 'px';
+        function myFunction(x) {
+            if (x.matches)
+                {document.getElementById('cont-left').style.height = "inherit";}
+            else
+                document.getElementById('cont-left').style.height = document.getElementById('cont-right').clientHeight + 'px';
+        }
+        var x = window.matchMedia("(max-width: 620px)")
+        myFunction(x) // Call listener function at run time
+        x.addListener(myFunction) // Attach listener function on state changes
     </script>
 </body>
 </html>
