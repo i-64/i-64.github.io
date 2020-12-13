@@ -103,9 +103,15 @@ li {
     margin-top: 350px;
 }
 
+li {
+    transition: 0.3s;
+}
+
 li:hover {
     cursor: pointer;
     font-weight: 700;
+    font-size: 18px;
+    /* background-color: lightgray; */
 }
 
 .preview-block {

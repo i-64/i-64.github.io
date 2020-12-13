@@ -1,5 +1,5 @@
 function script () {
-    for (var i = 1; i <= 9; i++) {
+    for (var i = 1; i <= 10; i++) {
         // console.log(i)
         const _i = i
         document.getElementById('' + _i).onmouseover = function () {
