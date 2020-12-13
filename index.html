@@ -1,71 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>Mrunal Ahire</title>
+    <link rel="stylesheet" href="master.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="master.js" charset="utf-8"></script>
 </head>
-<body>
-    <div id="main-cont">
-    <div id="cont-left">
-        <h3>Mrunal Ahire</h3>
-        <br>
-        <div class="menu-item"><a href="#cont-right">Home</a></div>
-        <div class="menu-item"><a href="#work-ex">Work Experience</a></div>
-        <div class="menu-item"><a href="#education">Education</a></div>
-        <div class="menu-item"><a href="#projects">Projects</a></div>
-        <div class="menu-item"><a href="https://i-64.github.io/resume.pdf">Resume</a></div>
-        <div class="menu-item"><a href="#cp">Competitive</a></div>
-        <div class="menu-item"><a href="#contact">Contact</a></div>
+<body onload="script();">
+
+    <!-- SIDE BAR BEGINS -->
+    <div class="sidenav">
+
+        <div class="sidenav-head"> <h2> Mrunal Ahire </h2> </div>
+        <div class="sidebar-item"> <a href="#about">About</a> </div>
+        <div class="sidebar-item"> <a href="#workex">Work Experience</a> </div>
+        <div class="sidebar-item"> <a href="#education">Education</a> </div>
+        <div class="sidebar-item"> <a href="#projects">Projects</a> </div>
+        <div class="sidebar-item"> <a href="#achievements">Achievements</a> </div>
+        <div class="sidebar-item"> <a href="#cp">Competitive</a> </div>
+        <div class="sidebar-item"> <a href="#resume">Resume</a> </div>
+        <div class="sidebar-item"> <a href="#contact">Contact</a> </div>
+
+        <!-- FOOTER BEGINS -->
+        <div id="footer">
+            <!-- <p class="text-left"><a href="#" id="hit-count"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fi-64.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=true"/></a></p> -->
+            <p class="text-left">Last updated: Dec 2020</p>
+        </div>
+        <!-- FOOTER ENDS -->
     </div>
-    <div id="cont-right">
-        <h1>Mrunal Ahire</h1>
-        <p id="about-me">I'm a CS grad from class of '20. Currently, I work as a Software Engineer at HSBC. My interest lies in the problem solving and the design and analysis of algorithms, apart from that I'm also interested in learning about architecture of large-scale systems.</p>
-        <div id="work-ex">
-        <h3 class="cat-head">Work Experience</h3>
-        <ul class="cat-items">
+    <!-- SIDE BAR ENDS -->
 
-            <li><p> Trainee Software Engineer @ <strong style="color: red;">HSBC</strong> <br>
-            <i style="color:black;">September 2020 - currently working</i></p></li>
+    <!-- MAIN CONTENT DIV BEGINS -->
+    <div class="main-cont">
 
-            <div id="inactive">
-                <li><p> Web-dev Intern @ Hamsa Overseas <br>
-                <i>August 2020 - August 2020</i></p></li>
+        <h1 class="main-head">Mrunal Ahire</h1>
+        <hr>
+        <p>I am a CS grad from the class of '20. Currently, I work as a Software Engineer at HSBC. My interest lies in the problem solving and the design and analysis of algorithms, apart from that I'm also interested in learning about architecture of large-scale systems.</p>
 
-                <li><p>Website Head @ VIITGandharva'20 <br>
-                <i>December 2019 - January 2020</i></p></li>
+        <!-- WORK EXPERIENCE BEGINS -->
+        <div id="workex">
+            <h3 class="section-head">Work Experience</h3>
+            <hr>
+            <ul>
+                <li id="1" target="1"><p> Trainee Software Engineer <i class="date-right">Sept 2020 - currently working</i> <br>
+                <i style="color:black;"><strong style="color: red;">HSBC</strong></i></p></li>
+                <div id="inactive">
+                    <li id="2" target="2"><p> Web-dev Intern <i class="date-right">Aug 2020 - Aug 2020</i> <br>
+                    <i>Hamsa Overseas</i></p></li>
 
-                <li><p>Intern @ Infiniti System <br>
-                <i>January 2019 - February 2019</i></p></li>
-            </div>
-        </ul>
+                    <li id="3" target="3"><p>Website Head <i class="date-right">Dec 2019 - Jan 2020</i> <br>
+                    <i>VIIT Gandharva'20</i></p></li>
+
+                    <li id="4" target="4"><p>Intern <i class="date-right">Jan 2019 - Feb 2019</i> <br>
+                    <i>Infiniti Systems</i></p></li>
+                </div>
+            </ul>
         </div>
+        <!-- WORK EXPERIENCE ENDS -->
 
+        <!-- EDUCATION BEGINS -->
         <div id="education">
-        <h3 class="cat-head">Education</h3>
-        <ul>
-            <li><p>Computer Engineering @ VIIT, Pune <br>
-            <i>August 2016 - September 2020</i></p></li>
-        </ul>
+            <h3 class="section-head">Education</h3>
+            <hr>
+            <ul>
+                <li id="5" target="5"><p>Computer Engineering <i class="date-right">Aug 2016 - Sept 2020</i> <br>
+                <i>VIIT, Pune</i> <br> <i>GPA: 8.96</i> </p></li>
+            </ul>
         </div>
+        <!-- EDUCATION ENDS -->
 
+        <!-- PROJECTS BEGIN -->
         <div id="projects">
-        <h3 class="cat-head">Projects</h3>
-        <ul>
-            <li><p>VIIT Gandharva <a href="https://viitgandharva.com"><strong>[link]</strong></a> <br>
-            <i>December 2019 - January 2020</i></p></li>
-        </ul>
-        <ul>
-            <li><p>Image Captioning for SSB-TAT Images <br>
-            <i>July 2019 - May 2020</i></p></li>
-        </ul>
-        <ul>
-            <li><p>Resume Builder <a href="resume-builder.pythonanywhere.com"><strong>[link]</strong></a> <br>
-            <i>December 2020 - still working on it</i></p></li>
-        </ul>
+            <h3 class="section-head">Projects</h3>
+            <hr>
+            <ul>
+                <li id="9" target="9"><p>VIIT Gandharva Website <a href="https://viitgandharva.com"><strong>[link]</strong></a> <i class="date-right">Dec 2019 - Jan 2020</i> <br>
+                <i>VIIT Gandharva Techno-Cultural</i></p></li>
+
+                <li id="6" target="6"><p>Image Captioning for SSB-TAT Images <i class="date-right">July 2019 - May 2020</i> <br>
+                <i>Applied AI Group @ CDAC</i></p></li>
+
+                <li id="7" target="7"><p>Resume Builder <a href="resume-builder.pythonanywhere.com"><strong>[link]</strong></a> <i class="date-right">still working on it</i> <br>
+                <i>Personal</i> </p></li>
+            </ul>
         </div>
+        <!-- PROJECTS END -->
+
+        <!-- ACHIEVEMENTS BEGIN -->
+        <div id="achievements">
+            <h3 class="section-head">Awards and Recognitions</h3>
+            <hr>
+            <ul>
+                <li id="8" target="8"><p>Top Performing Grad 2020 <i style="float:right;">Dec 2020</i><br>
+                <i>HSBC</i></p></li>
+            </ul>
+        </div>
+        <!-- ACHIEVEMENTS END -->
+
+        <!-- CONTACT BEGINS -->
         <div id="contact">
-            <h3 class="cat-head">Contact</h3>
+            <h3 class="section-head">Contact</h3>
+            <hr>
             <ul>
                 <div class="text-left">Phone: +91 8788***194 <br>
                 Email: <a href="mailto:mrunal.ahire@gmail.com">mrunal.ahire@gmail.com</a> <!-- (personal)&nbsp;; &nbsp; <a href="mailto:mrunal.rajendra.ahire@hsbc.co.in">mrunal.rajendra.ahire@hsbc.co.in</a>(work)-->
@@ -76,112 +113,134 @@
                 </div>
             </ul>
         </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <div id="footer">
-            <hr><p class="text-left"><a href="#" id="hit-count"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fi-64.github.io&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=visits&edge_flat=true"/></a></p><p class="text-right">Last updated: Nov 30, 2020</p>
-        </div>
+        <!-- CONTACT ENDS -->
+
+        <br><br>
     </div>
-</div>
-    <style>
-        body {
-            margin: 0px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        .cat-head {
-        }
-        h1 {
-            color: rgb(50, 100, 240);
-        }
-        #main-cont {
-            height: fit-content;
-        }
-        #cont-left {
-            padding-right: 5px;
-            padding-left: 5px;
-            margin: 2px;
-            height: 100%;
-            width: 165px;
-            float: left;
-            background-color: rgb(246, 246, 246);
-            border: solid rgb(211, 211, 211) 1px;
-        }
-        h1 {
-            border-bottom-style: double;
-            border-color: black;
-        }
-        h3 {
-            border-bottom: solid gray 1px;
-        }
-        #about-me {
-            padding-left: 15px;
-            padding-right: 10px;
-        }
-        #cont-right {
-            height: fit-content;
-            padding-left: 15px;
-            padding-right: 15px;
-            overflow: hidden;
-            width: 60%;
-        }
-        .menu-item {
-            margin: 5px;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-        #footer {
-            width: 100%;
-        }
-        .text-left {
-            margin: 0px;
-            float: left;
-        }
-        .text-right {
-            margin: 0px;
-            float: right;
-        }
-        #inactive {
-            color: #606060;
-        }
-        i {
-            color: #606060;
-        }
-        a:visited {
-            color: #0000EE;
-        }
-        @media only screen and (max-width:620px) {
-            /* For mobile phones: */
-            #cont-right {
-                width: auto;
-            }
-            #cont-left {
-                /* padding: 0px;
-                margin: 0px;
-                width: fit-content;
-                float: left; */
-                /* height: 0px; */
-                padding-left: 10px;
-                padding-right: 10px;
-                display: none;
-                /* visibility: hidden; */
-            }
-            /* .menu-item {
-                height: 0px;
-            } */
-        }
-    </style>
-    <script type="text/javascript">
-        function myFunction(x) {
-            if (x.matches)
-                {document.getElementById('cont-left').style.height = "inherit";}
-            else
-                document.getElementById('cont-left').style.height = document.getElementById('cont-right').clientHeight + 'px';
-        }
-        var x = window.matchMedia("(max-width: 620px)")
-        myFunction(x) // Call listener function at run time
-        x.addListener(myFunction) // Attach listener function on state changes
-    </script>
+    <!-- MAIN CONTENT DIV ENDS -->
+
+
+    <!-- PREVIEW PANE BEGINS -->
+    <div class="preview-pane">
+
+        <!-- DEFAULT PREVIEW BEGINS -->
+        <div id="preview-default">
+            <div class="preview-text">
+                <p style="color:red;"> ** Hover over stuff to preview ** </p>
+            </div>
+        </div>
+        <!-- DEFAULT PREVIEW ENDS -->
+
+        <!-- ====== WORK EXPERIENCE PREVIEWS BEGIN ======= -->
+
+        <!-- HSBC PREVIEW BEGINS -->
+        <div id="preview1" class="preview-block">
+            <img class="preview-logo" src="https://i0.wp.com/freepngimages.com/wp-content/uploads/2016/11/hsbc-logo.png?fit=1175%2C992" alt="hsbc_logo">
+            <div class="preview-text">
+                <p>Worked in IT Infrastructure and Delivery >> Client Services >> CS Operations >> CSSDS (CS - Shared Dev Services) Team</p>
+                <ul>
+                    <li>
+                    <p>Project #1: GoURL</p>
+                    <p>Tech: C#.NET | ReactJS</p>
+                    <p>URL Shortener Service used at HSBC internally</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- HSBC PREVIEW ENDS -->
+
+        <!-- HAMSA OVERSEAS PREVIEW BEGINS -->
+        <div id="preview2" class="preview-block">
+            <img class="preview-logo" src="https://hamsaoverseas.com/static/img/logo/footerLogo.png" alt="hamsa_overseas_logo">
+            <div class="preview-text">
+                <p>Developed the website for Hamsa Overseas</p>
+                <p>Tech: HTML5 | CSS3 | JS | Bootstrap 4</p>
+                <p>Website front end, mainly to showcase the available products of Hamsa Overseas</p>
+            </div>
+        </div>
+        <!-- HAMSA OVERSEAS PREVIEW ENDS -->
+
+        <!-- GANDHARVA PREVIEW BEGINS (WEB HEAD) -->
+        <div id="preview3" class="preview-block">
+            <img class="preview-logo" src="https://raw.githubusercontent.com/gandharva2k/GandharvaWeb20/master/EventApp/static/gandharva/images/icons/icon-512x512.png?token=AKO3T4ZWBENKK4MG273AP2273YZQ2" alt="viit_gandharva_logo">
+            <div class="preview-text">
+                <p>Developed the website for VIIT Gandharva</p>
+                <p>Tech: Django | AWS | HTML | CSS | JS</p>
+                <p>Being the website head for VIIT Gandharva 2020, Techno-Cultural Event, led the development team for the website and worked on backend of the site and worked on integrating the payments with sponsors.</p>
+            </div>
+        </div>
+        <!-- GANDHARVA PREVIEW ENDS (WEB HEAD) -->
+
+        <!-- INFINITI PREVIEW BEGINS -->
+        <div id="preview4" class="preview-block">
+            <img class="preview-logo" src="https://infiniti.pythonanywhere.com/static/images/logo_infiiot.png" alt="infiniti_tech_logo">
+            <div class="preview-text">
+                <p>Developed the Website for Infiniti Technologies</p>
+                <p>Tech: NodeJS | VueJS </p>
+                <p>Developed the Backend REST API for Infiniti Technologies</p>
+            </div>
+        </div>
+        <!-- INFINITI PREVIEW ENDS -->
+
+        <!-- ======= WORK EXPERIENCE PREVIEWS END ======= -->
+
+        <!-- ======= EDUCATION PREVIEWS BEGIN ======= -->
+
+        <!-- VIIT PREVIEW BEGINS -->
+        <div id="preview5" class="preview-block">
+            <img class="preview-logo" src="https://www.logolynx.com/images/logolynx/b9/b976d09f2953463d6746c45428a71649.jpeg" alt="vishwakarma_institutes_logo">
+            <div class="preview-text">
+                <p>Bachelor of Engineering in Computer Science</p>
+                <p>At Vishwakarma Institute of Information Technology, Pune</p>
+                <p>Cum. GPA: 8.96 / 10</p>
+                <p>Courses taken:</p>
+                <ul>
+                    <li>Data Structures and Algorithms</li>
+                    <li>Advanced Data Structures</li>
+                    <li>Engineering Mathematics</li>
+                    <li>Discrete Mathematics</li>
+                    <li>Database Management Systems</li>
+                    <li>Operating Systems</li>
+                    <li>Digital Electronics & Logic Design</li>
+                    <li>Computer Networks</li>
+                    <li>Data Mining and Warehousing</li>
+                    <li>Data Science</li>
+                    <li>Machine Learning</li>
+                </ul>
+            </div>
+        </div>
+        <!-- VIIT PREVIEW ENDS -->
+
+        <!-- ======= EDUCATION PREVIEWS END ======= -->
+
+        <!-- ======= PROJECTS PREVIEWS BEGIN ======= -->
+
+        <!-- CDAC PREVIEW BEGINS -->
+        <div id="preview6" class="preview-block">
+            <img class="preview-logo" src="https://upload.wikimedia.org/wikipedia/en/d/db/C-DAC_LogoTransp.png" alt="cdac_logo">
+            <div class="preview-text">
+                <p>Automatic Grading of SSB-TAT Tests</p>
+                <p>Sponsored by Applied AI Group of Center for Development of Advanced Computing (C-DAC)</p>
+                <p>Tech: Deep Learning | PHP | HTML |</p>
+                <p>Developed Automatic grader for Picture Perception Tests that uses Faster R-CNN for object detection from sketches</p>
+            </div>
+        </div>
+        <!-- CDAC PREVIEW ENDS -->
+
+        <!-- GANDHARVA PREVIEW BEGINS (PROJECT) -->
+        <div id="preview9" class="preview-block">
+            <img class="preview-logo" src="https://raw.githubusercontent.com/gandharva2k/GandharvaWeb20/master/EventApp/static/gandharva/images/icons/icon-512x512.png?token=AKO3T4ZWBENKK4MG273AP2273YZQ2" alt="viit_gandharva_logo">
+            <div class="preview-text">
+                <p>Developed the website for VIIT Gandharva</p>
+                <p>Tech: Django | AWS | HTML | CSS | JS</p>
+                <p>Being the website head for VIIT Gandharva 2020, Techno-Cultural Event, led the development team for the website and worked on backend of the site and worked on integrating the payments with sponsors.</p>
+            </div>
+        </div>
+        <!-- GANDHARVA PREVIEW ENDS (PROJECT) -->
+
+        <!-- ======= PROJECTS PREVIEWS END ======= -->
+
+    </div>
+    <!-- PREVIEW PANE ENDS -->
 </body>
 </html>
