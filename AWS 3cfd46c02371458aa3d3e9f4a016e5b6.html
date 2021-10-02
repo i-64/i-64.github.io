@@ -1,0 +1,666 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>AWS</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="0ba8b86b-6236-48f1-9b74-dce890625de5" class="page sans"><header><h1 class="page-title">AWS</h1></header><div class="page-body"><nav id="269105bb-0b7a-4215-a6eb-b235dc787e1e" class="block-color-gray table_of_contents"><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#9201feb8-106c-4ec1-96e4-0867664f62f0">Intro/Getting started</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#443c4c93-82ec-4605-b1fb-ec1bc8ddd896">Global Infra</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#93cb299c-877f-44ab-b468-0215de44b010">Choice of Region</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#1d21daaf-e4b2-4960-ac2c-438db3c845d3">Interacting with AWS API</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#355d7824-c92f-4d8d-801c-4e054c254990">Account Creation</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#d0215854-ba78-4a3c-b904-bd798fbcb537">Security</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#cb6a62da-7803-4681-bd3f-ebca03612131">Intro</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#805b9abe-2d80-4a0e-ba61-2d6a6b16719b">IAM Users</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ebd210e7-2e87-4041-8079-81729454aa2c">IAM Roles</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#03acf608-3379-4ae7-9967-772ecababd92">Launching EC2</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#4b57f854-7cd0-44ca-9ab0-8be5e54307e0">Compute</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#4e0ddef3-9d71-4f7c-845e-f618e5113ecf">Intro</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#2cad4134-992e-4728-bca4-4aef580e5aab">Compute as a Service</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#1b337307-c4ce-4dce-a4fc-ad3daa6132f9">EC2</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#975823c9-3a62-448a-9f8f-9a31ba1bde3b">EC2 Intro</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ff51260c-dd2e-454b-9e43-9f4e53b09ec0">EC2 Life Cycle</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#51e6138c-c44b-4afc-9e4b-5c91b6bc431f">Creating EC2 instance</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#cd848f7e-0bfb-46e3-9659-b59ac32a87ae">Container Services</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#ac84a6b9-efab-4628-9da4-311b8360cb05">Serverless</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#12b2a022-a2a5-4ccb-9a1a-f31e40b20100">AWS Lambda</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#a3105ba4-4435-4a65-999a-476b61fd305a">Choosing services</a></div><div class="table_of_contents-item table_of_contents-indent-0"><a class="table_of_contents-link" href="#57ed3aa6-d6e4-4a90-bed8-031984ac2065">Networking</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#19f01742-b2c7-4f25-9070-998a55d8cec7">VPCs</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#b91f4cf2-248c-400b-b30e-7fcdf6994162">Creating VPC &amp; subnets</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#5d14c1f8-fe37-4af3-b6fc-864021d4a556">VPC Routing</a></div><div class="table_of_contents-item table_of_contents-indent-1"><a class="table_of_contents-link" href="#54699e92-8937-49ab-9d9d-9a5e083cb5c3">Security</a></div></nav><hr id="ceb0ce3a-f62f-4e02-b896-1de61873b6b5"/><p id="f4d08eb7-edc3-4ddd-b2bc-37c524cdba41" class="">
+</p><h2 id="9201feb8-106c-4ec1-96e4-0867664f62f0" class="">Intro/Getting started</h2><h3 id="443c4c93-82ec-4605-b1fb-ec1bc8ddd896" class="">Global Infra</h3><ul id="13432abc-bfbe-4c83-8811-79701ada36ac" class="bulleted-list"><li style="list-style-type:disc">Data at some AWS data center</li></ul><ul id="b1b6ae49-dc55-452d-a666-185f16859848" class="bulleted-list"><li style="list-style-type:disc">Cluster of these ⇒ Availability Zone</li></ul><ul id="8dc4f7d5-0ecb-4d21-ae12-de869de7190f" class="bulleted-list"><li style="list-style-type:disc">Cluster of AZs ⇒ Region</li></ul><ul id="04d0d482-8ae4-4138-83ac-3f3c76d820d7" class="bulleted-list"><li style="list-style-type:disc">Regions like London, N. Virgina, etc</li></ul><ul id="be134864-4ccc-4ebe-ba20-0a98b50a401e" class="bulleted-list"><li style="list-style-type:disc">Provides resilience to hardware failures, natural calamities, etc</li></ul><ul id="eac6251e-8774-46d8-bc29-d2c705c5e45a" class="bulleted-list"><li style="list-style-type:disc">All of these connected by low latency links</li></ul><p id="59692ae8-f9f0-4291-9200-a2afdc4d537a" class="">
+</p><h3 id="93cb299c-877f-44ab-b468-0215de44b010" class="">Choice of Region</h3><ul id="c4cdb8bd-d55e-4cd7-8272-f0e3d7ec5a5c" class="bulleted-list"><li style="list-style-type:disc">Compliance: data should stay in UK only</li></ul><ul id="fdf7aad9-3ffb-48d4-a66d-292a6b0b096e" class="bulleted-list"><li style="list-style-type:disc">Latency: data should be close to users geo location</li></ul><ul id="cd502765-b5b9-477a-93ba-ca202af47f90" class="bulleted-list"><li style="list-style-type:disc">Pricing: diff prices for diff countries due to tax norms</li></ul><ul id="b34e9ab9-51c5-4a6c-a0f6-a46b9feaebe5" class="bulleted-list"><li style="list-style-type:disc">Service Availability: some services aren&#x27;t available in some regions</li></ul><p id="ada35af9-72bb-40d2-9f2c-549bbfc0ed17" class="">
+</p><h3 id="1d21daaf-e4b2-4960-ac2c-438db3c845d3" class="">Interacting with AWS API</h3><ul id="c06d0909-2d9a-47cf-92f7-d9b7422984c8" class="bulleted-list"><li style="list-style-type:disc">GUI: aka AWS management console</li></ul><ul id="f6b807f0-ca90-4990-add6-6346d42037eb" class="bulleted-list"><li style="list-style-type:disc">CLI: through terminal</li></ul><ul id="3f07d5d1-2740-4b9f-a687-540ad3c70c7a" class="bulleted-list"><li style="list-style-type:disc">SDK: through general purpose programming languages, java, py, js, etc</li></ul><p id="50afea83-8359-44ca-9ade-bb8dc1a96b75" class="">
+</p><h3 id="355d7824-c92f-4d8d-801c-4e054c254990" class="">Account Creation</h3><ul id="2364817e-5af2-47cd-b15f-bb38bc3928ea" class="bulleted-list"><li style="list-style-type:disc">Signed up with hsbc email, billing email is personal gmail, account name is <code>mrunal</code></li></ul><ul id="a652a11c-22e1-41ba-abe8-2afa3fbffca9" class="bulleted-list"><li style="list-style-type:disc">Added hsbc debit card</li></ul><ul id="fb97dcff-55e4-460a-a9a5-6bbac21d5b51" class="block-color-red bulleted-list"><li style="list-style-type:disc">Signed up for free tier, couldn&#x27;t setup alarm for billing though</li></ul><p id="c10bc391-dc5e-4bd7-bd05-207509ea8d72" class="">
+</p><h2 id="d0215854-ba78-4a3c-b904-bd798fbcb537" class="">Security</h2><h3 id="cb6a62da-7803-4681-bd3f-ebca03612131" class="">Intro</h3><ul id="862a1653-2fb8-4601-8283-cb79a01d6de0" class="bulleted-list"><li style="list-style-type:disc">Security: AWS takes care of security of h/w, servers, s/w(db,storage,n/w,compute) the runs aws services upto the virtualization layer, after that, the customer is responsible for security &quot;in&quot; the cloud.
+Customer should do patching, upgrade of OS, ocnfig of firewall, and other security of applications, IAM, etc.</li></ul><ul id="7e214156-fe0c-440a-a17e-51da82d0727b" class="bulleted-list"><li style="list-style-type:disc">Check what&#x27;s virtualization (I think its AWS using some OS, and running our VMs on it virtually).</li></ul><ul id="7e30abba-bf14-4910-bc9d-8c815071fd6d" class="bulleted-list"><li style="list-style-type:disc">Security of building is builder&#x27;s responsibility, security of your apartment is your responsibility, ex. installing a door lock.</li></ul><p id="26a93f41-731c-4c29-92a5-fa1da3b437d3" class="">
+</p><h3 id="805b9abe-2d80-4a0e-ba61-2d6a6b16719b" class="">IAM Users</h3><ul id="1d9c91c7-fd8e-477f-9361-5db75fdeb416" class="bulleted-list"><li style="list-style-type:disc">Email signed up with has unrestricted access to everything, is the root user. It has all of the powers that can be had.</li></ul><ul id="7f80bcc7-f1c9-4498-93c7-003af72fde4f" class="bulleted-list"><li style="list-style-type:disc">Create IAM users for all individual users, and create groups for define accesses</li></ul><ul id="6d5ecfe7-06a5-432e-922e-defb2e33cad1" class="bulleted-list"><li style="list-style-type:disc">Also there&#x27;s authentication and authorisation, to call any services service, even if they belong to the same aws account(say to store image from EC2 to S3) auth is required, this is on aws level only (irrespective of whether or not the services are owned by same of different account), application level auth stuff is to e implemented by the customer.</li></ul><ul id="3d998890-e30c-4ca4-bdd6-4e6bad7bc9fd" class="bulleted-list"><li style="list-style-type:disc">In short, most aws api calls must be signed and authenticated</li></ul><p id="8e5c8959-a907-4ca6-8282-cfccb959b8b5" class="">
+</p><h3 id="ebd210e7-2e87-4041-8079-81729454aa2c" class="">IAM Roles</h3><ul id="5cca0488-fa20-4972-89ab-18fc323b2eac" class="bulleted-list"><li style="list-style-type:disc">So there&#x27;s 2 things, IAM User &amp; IAM Roles: both are identities, User is typically used by individual users, while roles are used by &quot;someone&quot; or &quot;something&quot;, say your code to call another aws service.</li></ul><ul id="f2bf65ba-950f-4c24-8cf9-8e697dd57a53" class="bulleted-list"><li style="list-style-type:disc">This way you don&#x27;t need to create IAM User for the code, nor do you need to hardcode any credentials.</li></ul><p id="bbf913af-d1a7-4b0d-852b-c96f4dfed3f9" class="">
+</p><div id="cac5d3db-8b7c-450a-9fb2-32218b423ecd" class="column-list"><div id="00e4d7b0-bc54-4f66-af35-5c41994b74e3" style="width:50%" class="column"><p id="7b518590-c8e3-4059-885a-41bacd90bb6b" class="">IAM Users</p><ul id="51cef574-8330-45b1-80a9-54479e554658" class="bulleted-list"><li style="list-style-type:disc">Have login(static) credentials and credentials</li></ul></div><div id="a163a629-5a4c-46bf-afae-bac2b421edc1" style="width:50%" class="column"><p id="2ccff2e9-a485-45b5-8bbf-490bffdaa5d3" class="">IAM Roles</p><ul id="b026d958-ad9f-462f-b073-f2982411cada" class="bulleted-list"><li style="list-style-type:disc">No login creds (username&amp;password)
+Only crews to sign requests</li></ul><ul id="706fe3e5-e53c-4b36-a181-0a5be735490b" class="bulleted-list"><li style="list-style-type:disc">Assigned programmatically</li></ul><ul id="1c14a925-8b1c-4dca-b9a3-7806aac3c342" class="bulleted-list"><li style="list-style-type:disc">Temporary crews for configurable amount of time</li></ul><ul id="c0ea4822-865f-477a-9d59-58b852932da0" class="bulleted-list"><li style="list-style-type:disc">Creds expire and are rotated</li></ul></div></div><p id="68768fef-fff1-4fbf-80e9-d662b3ff5c83" class="">How it works?</p><ol type="1" id="45985efb-bcf7-40fd-8d08-973b54264f46" class="numbered-list" start="1"><li>Admin creates an IAM Role that grants access to S3 bucket.</li></ol><ol type="1" id="d5be856f-74c2-42a3-8224-7979056d5f14" class="numbered-list" start="2"><li>Launch EC2 instance with IAM Role.</li></ol><ol type="1" id="168559b8-974a-4cf1-9769-26e64f4cb648" class="numbered-list" start="3"><li>App retrieves IAM Role credentials from EC2 instance.</li></ol><ol type="1" id="b97dd54a-b2e9-41db-9e1f-0ea8813d14d2" class="numbered-list" start="4"><li>App makes API calls using temporary credentials.</li></ol><p id="930f2dae-085a-4bea-a42f-2511926eeb90" class="">
+</p><p id="795fa128-ca10-4e67-9f8c-9331d0c0fd2b" class="">Steps:</p><p id="f29886a0-6ba6-4025-a98e-fb5b77856ccf" class="">Console &gt;&gt; IAM &gt;&gt; Roles &gt;&gt; Create a Role &gt;&gt; Select trusted entity to assume the role(EC2 in our case) &gt;&gt; Choose policy (AWS managed / custom) &gt;&gt; add tags &gt;&gt; name, description &gt;&gt; done</p><ul id="eea2096f-5d4b-4a50-bb9b-0737f7b8e46d" class="bulleted-list"><li style="list-style-type:disc">pick s3fullaccess for dynamoDB for the project.</li></ul><ul id="a27518a1-8a80-49fb-a02f-47fe74fafd7b" class="bulleted-list"><li style="list-style-type:disc">policy JSON can be viewed by expanding.</li></ul><ul id="eec266fc-7b80-4e94-b9e2-58dc194c8c5a" class="bulleted-list"><li style="list-style-type:disc">If Identity Provider already exists, it can be used to create &quot;federated&quot; users, AWS SSO can make this easier.</li></ul><p id="1d6edc49-2700-40e0-a4f9-a3db4033488e" class="">IAM setup reference: <a href="https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/lab-2-iam.html">https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/lab-2-iam.html</a></p><p id="f1f87ab3-f709-4cb9-8256-5458c251f141" class="">console login lnk for admin: <a href="https://377084509331.signin.aws.amazon.com/console">https://377084509331.signin.aws.amazon.com/console</a></p><p id="4026cf6d-cda0-46b1-aa97-a52adbd615ce" class="">
+</p><h2 id="03acf608-3379-4ae7-9967-772ecababd92" class="">Launching EC2</h2><ul id="1f43bfdc-a722-4a6a-ab54-ce7acb8cbff6" class="bulleted-list"><li style="list-style-type:disc">on the default VPC (virtual private network).</li></ul><ul id="8cc55fb4-b513-459a-bc6b-ba088c240c86" class="bulleted-list"><li style="list-style-type:disc">EC2 is a compute service that allows us to host virtual machines(VMs).</li></ul><ul id="c0be1962-5674-4e9c-8b33-f29a836de886" class="block-color-red bulleted-list"><li style="list-style-type:disc">TODO.</li></ul><p id="ad2f95cc-6a4c-4c7a-b501-a3a8ad02a4da" class="">
+</p><h2 id="4b57f854-7cd0-44ca-9ab0-8be5e54307e0" class="">Compute</h2><h3 id="4e0ddef3-9d71-4f7c-845e-f618e5113ecf" class="">Intro</h3><ul id="e7876f8e-2a58-4514-9806-3135b6cd4f1a" class="bulleted-list"><li style="list-style-type:disc">Services like EC2, ECS(container), EKS(Kubernetes), etc.</li></ul><ul id="575c66be-0e23-47c9-b6cf-4432e3771b71" class="bulleted-list"><li style="list-style-type:disc">We can&#x27;t launch EC2 instance into space, it needs to go somewhere.</li></ul><ul id="d3c396a4-e0dc-4408-aba0-883f7c4867e4" class="bulleted-list"><li style="list-style-type:disc">In AWS, each of this goes in a network (aka VPC).</li></ul><ul id="9888d4b3-75e7-413b-92c4-68b3601babd3" class="bulleted-list"><li style="list-style-type:disc">We need to configure this VPC ourselves, a lot of default values are provided though.</li></ul><p id="55f4192b-ad65-473f-90b8-0b3c48c0aef4" class="">
+</p><h3 id="2cad4134-992e-4728-bca4-4aef580e5aab" class="">Compute as a Service</h3><ul id="261d16e8-cc7a-4254-a4fd-0944bafa30ae" class="bulleted-list"><li style="list-style-type:disc">Doing anything, basically running software needs compute resources.</li></ul><ul id="a8716b7d-a423-43e1-88f4-970f14c4aee7" class="bulleted-list"><li style="list-style-type:disc">Having on-premises servers, take time &amp; money to buy and get delivered, time to setup, rent/space to keep, power to run, efforts to backup, secure, update, repair and maintain, and you can&#x27;t get your money &amp; time back when you don&#x27;t need them, you&#x27;re stuck with it, you use it or not.</li></ul><ul id="8b041096-9020-400c-b03e-7201d00231a3" class="bulleted-list"><li style="list-style-type:disc">CaaS model comes to the rescue here.</li></ul><ul id="d0a72838-21b5-4999-92b1-54aa6a9b519c" class="bulleted-list"><li style="list-style-type:disc">3 types of compute services: VM, container, server less.</li></ul><p id="6c77d09f-4cd5-4548-a6a3-70936f9d5521" class="">
+</p><h2 id="1b337307-c4ce-4dce-a4fc-ad3daa6132f9" class="">EC2</h2><h3 id="975823c9-3a62-448a-9f8f-9a31ba1bde3b" class="">EC2 Intro</h3><ul id="353f5b89-62cc-4e54-8645-278468163e24" class="bulleted-list"><li style="list-style-type:disc">EC2 is compute service, most flexible one available</li></ul><ul id="786319a2-d73b-4310-8e1c-40f0b4c5b16f" class="bulleted-list"><li style="list-style-type:disc">to spin it up, need to configure h/w and os</li></ul><ul id="43c6ad05-06a9-41ae-b520-290d4f054a76" class="bulleted-list"><li style="list-style-type:disc">To choose OS, pick a AMI (Amazon Machine Image) from the ones provided by aws or community ⇒ no installation drives, wizards, etc, basically custom ISOs</li></ul><ul id="a7e3ade7-f9da-4e15-be87-5c4769f7d018" class="bulleted-list"><li style="list-style-type:disc">While choosing, there are 2 components:<ul id="a57dcc01-dcc4-4e7a-bd35-f09db1960cb7" class="bulleted-list"><li style="list-style-type:circle">instance type: tells the blend of h/w capabilities</li></ul><ul id="a5a02fd6-ba34-4182-9849-da5c45d6ed97" class="bulleted-list"><li style="list-style-type:circle">instance size: nano...xxxlarge</li></ul><ul id="c4f86930-576e-4322-8782-78a8b66a5689" class="bulleted-list"><li style="list-style-type:circle">ex. t3.medium, or a1.large</li></ul><p id="1e72c220-7a96-4598-9d96-240236ecdc54" class="">
+</p></li></ul><h3 id="ff51260c-dd2e-454b-9e43-9f4e53b09ec0" class="">EC2 Life Cycle</h3><figure id="3cfd46c0-2371-458a-a3d3-e9f4a016e5b6" class="image"><a href="AWS%203cfd46c02371458aa3d3e9f4a016e5b6/Untitled.png"><img style="width:789px" src="AWS%203cfd46c02371458aa3d3e9f4a016e5b6/Untitled.png"/></a></figure><p id="7ddc196e-2342-40ea-abf3-a4cf82fcc69b" class="">Before terminating, get backup, cuz everything will be permanently lost, there&#x27;s also a termination protection option.</p><p id="02c056bc-4530-4ad9-a696-85b6787984fe" class="">Cost is incurred in running state</p><p id="b99fe392-452f-47f0-972c-570ac28a7d43" class="">
+</p><h3 id="51e6138c-c44b-4afc-9e4b-5c91b6bc431f" class="">Creating EC2 instance</h3><p id="50f567d3-e083-4ba4-be57-e534c166e17b" class="">ref: <a href="https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/lab-3-compute.html">https://aws-tc-largeobjects.s3-us-west-2.amazonaws.com/DEV-AWS-MO-GCNv2/lab-3-compute.html</a></p><ul id="2551f8af-0fcf-457c-b0a0-9e37e6b842a9" class="bulleted-list"><li style="list-style-type:disc">Created EC2 instance (Linux 2 SSD x86 free tier)</li></ul><ul id="62986fd8-6051-46a2-8e2c-bbe8305b484a" class="bulleted-list"><li style="list-style-type:disc">Added script to wget the code</li></ul><ul id="a48909fb-6110-4d3e-be47-7832b525e9d8" class="bulleted-list"><li style="list-style-type:disc">Launched instance, from EC2 &gt;&gt; instances</li></ul><ul id="cddd799f-7d09-4fdf-923b-3d89f6cf41c5" class="bulleted-list"><li style="list-style-type:disc">Changed state from dashboard running &gt;&gt; stopped &gt;&gt; terminated</li></ul><p id="ffb2add2-d340-4cdb-9a55-baaa2ba35373" class="">
+</p><h3 id="cd848f7e-0bfb-46e3-9659-b59ac32a87ae" class="">Container Services</h3><ul id="74d131b5-6662-44c2-a90c-2102552194e0" class="bulleted-list"><li style="list-style-type:disc">2 of them: ECS &amp; EKS ⇒ container orchestration services</li></ul><ul id="aafe17e1-4f15-4d08-a9d7-9906a580a196" class="bulleted-list"><li style="list-style-type:disc">We need processes for starting, stopping, restarting, monitoring, etc the containers running across not just 1 EC2 instance, but a number of them (aka EC2 cluster)</li></ul><ul id="9583a857-8575-4eea-9f9f-0892bc42ccb0" class="bulleted-list"><li style="list-style-type:disc">This process is called Container Orchestration ⇒ hard to do on your own and doing it manually isn&#x27;t scalable (as you approach thousands of containers)</li></ul><ul id="0b47ccda-a8a4-4ffb-a29d-840d5e593fd6" class="bulleted-list"><li style="list-style-type:disc">ECS &amp; EKS are orchestration tools help with this, just a little different ways offering a bit different features</li></ul><ul id="5aa02a8c-b7e3-43d0-b7ae-97d4d9f7e6d7" class="bulleted-list"><li style="list-style-type:disc">These are just container orchestration (or management) services, you need to use some compute service separately (i.e. EC2) and you need ECS agent installed on your EC2 instance.</li></ul><p id="850acf57-e9e8-4d06-9eab-be496e8685db" class="">
+</p><h3 id="ac84a6b9-efab-4628-9da4-311b8360cb05" class="">Serverless</h3><ul id="a66efa7a-0928-4450-b125-ff150db1b889" class="bulleted-list"><li style="list-style-type:disc">You are responsible for patching, updates, highly available architecture, gives you a lot of control over the environment, but sometimes its not required.
+Sometimes, you want to focus on the business solution and not do the other stuff while still getting the advantages of the other stuff.
+This is <strong>serverless.</strong></li></ul><ul id="916a117d-2603-4160-8368-64c90d9ddd26" class="bulleted-list"><li style="list-style-type:disc">You can&#x27;t see or access the underlying infra/instances hosting your solution, all the scaling, fault tolerance, etc is taken care of, so you focus only on the application, don&#x27;t need no operational processes.</li></ul><ul id="bf4ce7ab-2eff-45d6-a21b-b1b58bd095cc" class="bulleted-list"><li style="list-style-type:disc">AWS Fargate is a serverless compute alternative to EC2 to run containers on it.</li></ul><ul id="8964bc0e-1604-4ac0-a245-f8145cfe8eb8" class="bulleted-list"><li style="list-style-type:disc">It scales on demand, and fault tolerance is built-in.</li></ul><ul id="b3b7677a-0959-4aba-bc62-a5f5244681d4" class="bulleted-list"><li style="list-style-type:disc">Trade-off: Control vs Convinience.</li></ul><p id="7daff80f-2f2b-418a-ad79-6dda8ba31206" class="">
+</p><h3 id="12b2a022-a2a5-4ccb-9a1a-f31e40b20100" class="">AWS Lambda</h3><ul id="cdb04745-0b47-4771-9d56-3e2f6aa80c62" class="bulleted-list"><li style="list-style-type:disc">You write some code, package it, upload it, it&#x27;s converted into a lambda function.</li></ul><ul id="79dd5068-bfc0-498d-aa6c-2275ca7b1d99" class="bulleted-list"><li style="list-style-type:disc">These don&#x27;t keep running, they&#x27;re triggered.</li></ul><ul id="8f69e518-ab70-44fd-b6f6-94301d20d0f2" class="bulleted-list"><li style="list-style-type:disc">When triggered, AWS runs it in an isolated environment, managed by AWS.</li></ul><ul id="c5bd72d3-c2ba-429b-ab0a-8e08453906d5" class="bulleted-list"><li style="list-style-type:disc">Suitable for stuff like backend processing, or report generation, or resizing thumbnails, you don&#x27;t need this stuff to run 24x7.</li></ul><ul id="7effb4c7-8f8f-48e0-b3a7-0950035fc2e4" class="bulleted-list"><li style="list-style-type:disc">Currently the limit it 25 minutes, and you&#x27;re billed to the nearest 100ms.</li></ul><ul id="e5e393f8-f5f4-430c-9b94-4b8b7a035aa6" class="bulleted-list"><li style="list-style-type:disc">Both options of EC2 and serverless available.</li></ul><p id="5f70d607-fa4f-42e3-b731-595161c686ea" class="">
+</p><h3 id="a3105ba4-4435-4a65-999a-476b61fd305a" class="">Choosing services</h3><ul id="b77a53d9-989d-43d1-a2cc-ce361783ba54" class="bulleted-list"><li style="list-style-type:disc">mostly intuition and common sense to take informed decision.</li></ul><p id="e81046dc-90bb-411c-928c-4e64c4857fe2" class="">
+</p><p id="d9d3dd66-8e7d-45b5-829e-939baae27756" class="">
+</p><ul id="a325dbff-1d15-4629-be9a-a5548779642d" class="block-color-red to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked"><strong>FIX THIS GROUPING OF TOPICS IN COMPUTE</strong></span></li></ul><p id="e7f57291-0eae-4e62-85d7-44f1fe1aa357" class="">
+</p><h2 id="57ed3aa6-d6e4-4a90-bed8-031984ac2065" class="">Networking</h2><h3 id="19f01742-b2c7-4f25-9070-998a55d8cec7" class="">VPCs</h3><ul id="afebe6ac-af91-442a-b461-6417fec4a865" class="bulleted-list"><li style="list-style-type:disc">virtual private cloud: the network in which our applications live.</li></ul><ul id="a3eb675d-382a-4df1-abfd-844c4f916b2e" class="bulleted-list"><li style="list-style-type:disc">depending on requirements, default/custom VPC maybe used.</li></ul><ul id="2b5792dd-7a9f-4808-8aa1-29b19d6474f6" class="bulleted-list"><li style="list-style-type:disc">Nothing goes in/out of VPC without the owner&#x27;s explicit permission.</li></ul><p id="3ab8aea5-2524-47f2-9bf9-b48587fc9d47" class="">
+</p><h3 id="b91f4cf2-248c-400b-b30e-7fcdf6994162" class="">Creating VPC &amp; subnets</h3><ul id="dc920ea3-5512-42bf-b3a5-67955d14748f" class="bulleted-list"><li style="list-style-type:disc">Creating VPC: tell the Region &amp; IP Range (CIDR).</li></ul><ul id="7f7b2671-fcf4-4924-8bc9-de62e1d0b4a9" class="bulleted-list"><li style="list-style-type:disc">Creating Subnets: tell VPC, AZ, IP Range.</li></ul><ul id="6f11ce69-7e40-419e-91d1-bcff2514e4dd" class="bulleted-list"><li style="list-style-type:disc">Subnets provide us &quot;granular&quot; control over these networks.</li></ul><ul id="e18ef8da-9f33-4247-80ed-b2992453cddd" class="bulleted-list"><li style="list-style-type:disc">Ex. the public data could go on the internet enabled subnet, while private stuff will be hosted in the private network.</li></ul><ul id="508ca614-32bd-445b-83aa-885b1dd9a721" class="bulleted-list"><li style="list-style-type:disc">To achieve this: there&#x27;s Internet Gateway IGW &amp; Virtual Private Gateway VGW for internal corporate network(establishes an ecnrypted VPN) .</li></ul><figure id="87eb02d5-4e60-464b-b63c-b773e57a0bb2" class="image"><a href="AWS%203cfd46c02371458aa3d3e9f4a016e5b6/Untitled%201.png"><img style="width:1364px" src="AWS%203cfd46c02371458aa3d3e9f4a016e5b6/Untitled%201.png"/></a><figcaption>Network arch for high availability.</figcaption></figure><h3 id="5d14c1f8-fe37-4af3-b6fc-864021d4a556" class="">VPC Routing</h3><ul id="288fc120-cd8e-4f21-a475-abc9ce2b8454" class="bulleted-list"><li style="list-style-type:disc">We call the subnets public/private but its really the routing tables that decide this.</li></ul><ul id="9b42122f-92b4-4b1a-88af-60ffe93156d4" class="bulleted-list"><li style="list-style-type:disc">If there exists an entry in the route table of the internet gateway to the subnet, it means it has internet/public access.</li></ul><p id="67a3d035-6b91-4793-8263-edcbd256e18e" class="">
+</p><h3 id="54699e92-8937-49ab-9d9d-9a5e083cb5c3" class="">Security</h3><ul id="6e65f207-c1b2-4e06-9540-5e94bb0fa541" class="bulleted-list"><li style="list-style-type:disc">2 ways its provided in AWS: n/w ACLs (n/w access control) &amp; Security groups.</li></ul><ul id="467b9d09-f665-43c2-8e66-f44f62d1d0a4" class="bulleted-list"><li style="list-style-type:disc">n/w ACL is like a firewall for each of the subnets.</li></ul><ul id="3534109a-55ae-41c4-bb31-2e1485efcd04" class="bulleted-list"><li style="list-style-type:disc">Security groups are like firewall on the EC2 level.</li></ul><ul id="d811d7e6-81c8-462f-a978-0da872a73de9" class="bulleted-list"><li style="list-style-type:disc">for ACLs everything is allowed by default, you can block stuff by adding rules.
+for Sec Groups everything is blocked by default, you can allow stuff by adding rules.</li></ul><p id="d9c0fcbb-38ff-4a6a-abd4-0d0afbcfc345" class="">
+</p></div></article></body></html>
