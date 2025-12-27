@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight Tracker Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #f0f2f5;
+            padding: 20px; 
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* --- STATS GRID --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* 3 columns */
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px 5px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 20px; font-weight: bold; margin-top: 5px; color: #2c3e50; }
+        .stat-value.highlight { color: #007bff; }
+
+        /* --- CHART --- */
+        canvas {
+            width: 100%;
+            height: 250px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 25px;
+        }
+
+        /* --- INPUT FORM --- */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            background: #eef2f7;
+            padding: 15px;
+            border-radius: 8px;
+            align-items: flex-end;
+        }
+        .input-wrapper { flex: 1; }
+        .input-wrapper label { display: block; font-size: 12px; margin-bottom: 4px; color: #555; }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            height: 42px; /* Match input height */
+        }
+        button:hover { background-color: #0056b3; }
+
+        /* --- RECENT HISTORY --- */
+        h4 { margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .recent-list { list-style: none; padding: 0; margin: 0; }
+        .recent-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .recent-item:last-child { border-bottom: none; }
+        .recent-date { color: #777; }
+        .recent-val { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-label">Current</div>
+            <div class="stat-value highlight" id="stat-current">--</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Lowest</div>
+            <div class="stat-value" id="stat-min">--</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Highest</div>
+            <div class="stat-value" id="stat-max">--</div>
+        </div>
+    </div>
+
+    <canvas id="weightChart"></canvas>
+
+    <div class="input-group">
+        <div class="input-wrapper">
+            <label>Date</label>
+            <input type="date" id="inputDate">
+        </div>
+        <div class="input-wrapper">
+            <label>Weight (kg)</label>
+            <input type="number" id="inputWeight" placeholder="0.0" step="0.1">
+        </div>
+        <button onclick="saveEntry()">Save</button>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <h4>Recent History</h4>
+        <ul class="recent-list" id="recentList"></ul>
+    </div>
+</div>
+
+<script>
+    // --- MOCK DATA (Simulating 2 years of data) ---
+    // Start with some data
+    let data = [
+        { date: '2023-01-01', val: 85.0 },
+        { date: '2023-06-01', val: 82.5 },
+        { date: '2023-09-15', val: 79.0 },
+        { date: '2023-10-01', val: 78.5 },
+        { date: '2023-10-05', val: 77.8 }
+    ];
+
+    // --- INITIALIZE ---
+    // Set default date to Today
+    document.getElementById('inputDate').valueAsDate = new Date();
+    
+    // Initial Render
+    processDataAndRender();
+
+    // --- CORE LOGIC ---
+
+    function saveEntry() {
+        const dateInput = document.getElementById('inputDate').value;
+        const weightInput = parseFloat(document.getElementById('inputWeight').value);
+
+        if (!dateInput || isNaN(weightInput)) {
+            alert("Please enter valid date and weight");
+            return;
+        }
+
+        // UPSERT LOGIC: Check if date exists
+        const existingIndex = data.findIndex(d => d.date === dateInput);
+
+        if (existingIndex >= 0) {
+            // Update existing
+            data[existingIndex].val = weightInput;
+        } else {
+            // Add new
+            data.push({ date: dateInput, val: weightInput });
+        }
+
+        // Clear weight input for next entry (leave date as is, usually helpful)
+        document.getElementById('inputWeight').value = '';
+
+        processDataAndRender();
+    }
+
+    function processDataAndRender() {
+        // 1. Sort Data (Oldest to Newest)
+        data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // 2. Update Stats
+        updateStats();
+
+        // 3. Draw Chart
+        drawChart();
+
+        // 4. Update Recent List
+        updateRecentList();
+    }
+
+    function updateStats() {
+        if (data.length === 0) return;
+
+        const values = data.map(d => d.val);
+        const current = values[values.length - 1]; // Last item
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+
+        document.getElementById('stat-current').innerText = current + " kg";
+        document.getElementById('stat-min').innerText = min + " kg";
+        document.getElementById('stat-max').innerText = max + " kg";
+    }
+
+    function updateRecentList() {
+        const listEl = document.getElementById('recentList');
+        listEl.innerHTML = '';
+
+        // Get last 5 items, reverse them so newest is top
+        const recentItems = data.slice(-5).reverse();
+
+        recentItems.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'recent-item';
+            li.innerHTML = `
+                <span class="recent-date">${item.date}</span>
+                <span class="recent-val">${item.val} kg</span>
+            `;
+            listEl.appendChild(li);
+        });
+    }
+
+    // --- CHART LOGIC (Same as before, simplified) ---
+    function drawChart() {
+        const canvas = document.getElementById('weightChart');
+        const ctx = canvas.getContext('2d');
+        
+        // Resize
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        
+        const w = canvas.width;
+        const h = canvas.height;
+        const pad = 20;
+
+        if (data.length === 0) return;
+
+        // Get Min/Max for Y-Axis scaling (add some buffer)
+        const vals = data.map(d => d.val);
+        const maxVal = Math.max(...vals) + 1; 
+        const minVal = Math.min(...vals) - 1;
+        const range = maxVal - minVal;
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.beginPath();
+        ctx.strokeStyle = '#007bff';
+        ctx.lineWidth = 2;
+
+        data.forEach((pt, i) => {
+            // X: Percentage of width
+            const x = pad + (i / (data.length - 1 || 1)) * (w - pad * 2);
+            
+            // Y: Percentage of height (relative to min/max range)
+            // Formula: (Value - Min) / Range
+            const normalizedVal = (pt.val - minVal) / range;
+            const y = h - pad - (normalizedVal * (h - pad * 2));
+
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+    }
+    
+    // Resize listener
+    window.addEventListener('resize', drawChart);
+
+</script>
+</body>
+</html>
