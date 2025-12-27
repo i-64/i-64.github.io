@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weight Tracker</title>
     <style>
-        /* --- GLOBAL & LAYOUT --- */
+        /* --- GLOBAL --- */
         * { box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: #f0f2f5;
-            padding: 20px; 
+            background-color: #f0f2f5; 
+            padding: 15px; 
             margin: 0;
             color: #333;
         }
 
-        .container {
+        .main-wrapper {
             max-width: 600px;
             margin: 0 auto;
+        }
+
+        /* --- CARDS --- */
+        .card {
             background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
         }
 
         /* --- STATS GRID --- */
@@ -29,126 +34,129 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
-            margin-bottom: 20px;
             text-align: center;
+            margin-bottom: 20px;
         }
         .stat-box {
             background: #f8f9fa;
-            padding: 15px 5px;
+            padding: 10px 5px;
             border-radius: 8px;
             border: 1px solid #e9ecef;
         }
-        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-value { font-size: 20px; font-weight: bold; margin-top: 5px; color: #2c3e50; }
+        .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 18px; font-weight: bold; margin-top: 4px; color: #2c3e50; }
         .stat-value.highlight { color: #007bff; }
 
         /* --- CHART --- */
         canvas {
             width: 100%;
             height: 250px;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 25px;
             display: block;
         }
 
-        /* --- INPUT FORM (UPDATED FOR MOBILE) --- */
+        /* --- INPUT FORM --- */
         .input-group {
             display: flex;
-            flex-wrap: wrap;       /* Allow wrapping on small screens */
             gap: 10px;
-            background: #eef2f7;
-            padding: 15px;
-            border-radius: 8px;
+            margin-bottom: 20px; 
             align-items: flex-end;
         }
 
-        .input-wrapper { 
-            flex: 1;               /* Grow to fill space */
-            min-width: 130px;      /* Force wrap if screen is too tight */
+        .input-wrapper-date { flex: 3; min-width: 0; }
+        .input-wrapper-weight { flex: 2; min-width: 0; }
+
+        .input-wrapper-date label, 
+        .input-wrapper-weight label { 
+            display: block; 
+            font-size: 12px; 
+            margin-bottom: 6px; 
+            color: #555; 
+            font-weight: 600;
+            margin-left: 2px;
         }
-        
-        .input-wrapper label { display: block; font-size: 12px; margin-bottom: 4px; color: #555; }
         
         input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px;     
             font-size: 16px;
+            background: white;      
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            height: 42px;
-            flex: 0 0 auto;        /* Keep button size natural */
+            height: 45px; 
+            flex: 0 0 auto;
+            box-shadow: 0 2px 4px rgba(0,123,255,0.3);
         }
-        
-        button:hover { background-color: #0056b3; }
+        button:hover { background-color: #0056b3; transform: translateY(-1px); }
 
-        /* Mobile Tweak: Make button full width if it wraps to a new line */
-        @media (max-width: 400px) {
-            button { width: 100%; flex: 1 0 100%; }
-        }
-
-        /* --- RECENT HISTORY --- */
-        h4 { margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px;}
+        /* --- HISTORY LIST --- */
+        h4 { margin: 0 0 15px 0; font-size: 16px; color: #444; }
         .recent-list { list-style: none; padding: 0; margin: 0; }
         .recent-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #eee;
-            font-size: 14px;
+            font-size: 15px;
         }
         .recent-item:last-child { border-bottom: none; }
         .recent-date { color: #777; }
-        .recent-val { font-weight: bold; }
+        .recent-val { font-weight: 600; color: #333; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="stats-container">
-        <div class="stat-box">
-            <div class="stat-label">Current</div>
-            <div class="stat-value highlight" id="stat-current">--</div>
+<div class="main-wrapper">
+    
+    <div class="card">
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Current</div>
+                <div class="stat-value highlight" id="stat-current">--</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Lowest</div>
+                <div class="stat-value" id="stat-min">--</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Highest</div>
+                <div class="stat-value" id="stat-max">--</div>
+            </div>
         </div>
-        <div class="stat-box">
-            <div class="stat-label">Lowest</div>
-            <div class="stat-value" id="stat-min">--</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-label">Highest</div>
-            <div class="stat-value" id="stat-max">--</div>
-        </div>
+        <canvas id="weightChart"></canvas>
     </div>
 
-    <canvas id="weightChart"></canvas>
-
     <div class="input-group">
-        <div class="input-wrapper">
+        <div class="input-wrapper-date">
             <label>Date</label>
             <input type="date" id="inputDate">
         </div>
-        <div class="input-wrapper">
-            <label>Weight (kg)</label>
+        <div class="input-wrapper-weight">
+            <label>Weight</label>
             <input type="number" id="inputWeight" placeholder="0.0" step="0.1">
         </div>
         <button onclick="saveEntry()">Save</button>
     </div>
 
-    <h4>Recent History</h4>
-    <ul class="recent-list" id="recentList"></ul>
+    <div class="card">
+        <h4>Recent History</h4>
+        <ul class="recent-list" id="recentList"></ul>
+    </div>
+
 </div>
 
 <script>
-    // --- 1. DATA (Simulated) ---
+    // --- 1. DATA ---
     let data = [
         { date: '2023-01-01', val: 85.0 },
         { date: '2023-06-01', val: 82.5 },
@@ -157,7 +165,7 @@
         { date: '2023-10-05', val: 77.8 }
     ];
 
-    // --- 2. INITIALIZE ---
+    // --- 2. INIT ---
     document.getElementById('inputDate').valueAsDate = new Date();
     processDataAndRender();
 
@@ -173,12 +181,12 @@
 
         const existingIndex = data.findIndex(d => d.date === dateInput);
         if (existingIndex >= 0) {
-            data[existingIndex].val = weightInput; // Update
+            data[existingIndex].val = weightInput;
         } else {
-            data.push({ date: dateInput, val: weightInput }); // Insert
+            data.push({ date: dateInput, val: weightInput });
         }
 
-        document.getElementById('inputWeight').value = ''; // Clear weight
+        document.getElementById('inputWeight').value = ''; 
         processDataAndRender();
     }
 
@@ -213,7 +221,6 @@
         const canvas = document.getElementById('weightChart');
         const ctx = canvas.getContext('2d');
         
-        // Resize for responsiveness
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
         
@@ -228,20 +235,39 @@
         const minVal = Math.min(...vals) - 1;
         const range = maxVal - minVal;
 
+        // Helper to get coordinates
+        const getX = (i) => pad + (i / (data.length - 1 || 1)) * (w - pad * 2);
+        const getY = (val) => h - pad - ((val - minVal) / range) * (h - pad * 2);
+
         ctx.clearRect(0, 0, w, h);
+
+        // --- PASS 1: DRAW LINE ---
         ctx.beginPath();
         ctx.strokeStyle = '#007bff';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3; 
 
         data.forEach((pt, i) => {
-            const x = pad + (i / (data.length - 1 || 1)) * (w - pad * 2);
-            const normalizedVal = (pt.val - minVal) / range;
-            const y = h - pad - (normalizedVal * (h - pad * 2));
-
+            const x = getX(i);
+            const y = getY(pt.val);
             if (i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
         });
-        ctx.stroke();
+        ctx.stroke(); // Draw the connected line now
+
+        // --- PASS 2: DRAW DOTS ---
+        data.forEach((pt, i) => {
+            const x = getX(i);
+            const y = getY(pt.val);
+            
+            ctx.beginPath();
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 2;
+            
+            ctx.arc(x, y, 4, 0, Math.PI * 2); // Circle radius 4
+            ctx.fill();   // White center
+            ctx.stroke(); // Blue border
+        });
     }
     
     window.addEventListener('resize', drawChart);
