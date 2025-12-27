@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Weight">
+
+<meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>Weight Tracker</title>
     <style>
-        /* --- GLOBAL --- */
+        /* --- GLOBAL & RESET --- */
         * { box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
@@ -18,7 +25,39 @@
         .main-wrapper {
             max-width: 600px;
             margin: 0 auto;
+            position: relative; /* For login overlay positioning */
         }
+
+        /* --- LOGIN OVERLAY --- */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(240, 242, 245, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        .login-box h2 { margin-top: 0; color: #333; }
+        .login-box input {
+            width: 100%; padding: 12px; margin-bottom: 10px;
+            border: 1px solid #ddd; border-radius: 8px; font-size: 16px;
+        }
+        .login-btn {
+            width: 100%; padding: 12px; background: #007bff; color: white;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;
+        }
+        .login-btn:hover { background: #0056b3; }
+        #loginError { color: #dc3545; font-size: 14px; margin-top: 10px; min-height: 20px;}
 
         /* --- CARDS --- */
         .card {
@@ -27,6 +66,15 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             margin-bottom: 20px;
+        }
+
+        /* --- HEADER & LOGOUT --- */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px;
+        }
+        .logout-link {
+            font-size: 13px; color: #666; text-decoration: underline; cursor: pointer; border: none; background: none;
         }
 
         /* --- STATS GRID --- */
@@ -54,9 +102,8 @@
             display: block;
         }
 
-        /* --- INPUT FORM (THE FIX) --- */
+        /* --- INPUT FORM (CSS GRID FIX) --- */
         .input-group {
-            /* CSS Grid creates rigid lanes that CANNOT overlap */
             display: grid;
             /* Lane 1 (Date): Takes available space */
             /* Lane 2 (Weight): Takes less space */
@@ -68,20 +115,16 @@
         }
 
         .input-wrapper label { 
-            display: block; 
-            font-size: 12px; 
-            margin-bottom: 6px; 
-            color: #555; 
-            font-weight: 600;
-            margin-left: 2px;
-            white-space: nowrap; /* Prevent label wrapping */
+            display: block; font-size: 12px; margin-bottom: 6px; 
+            color: #555; font-weight: 600; margin-left: 2px;
+            white-space: nowrap; 
         }
         
-        input {
+        /* Modern Inputs */
+        .input-group input {
             width: 100%;
-            /* min-width: 0 is CRITICAL for Grid to force items to shrink */
             min-width: 0; 
-            padding: 12px 8px; /* Slightly tighter padding for mobile safety */
+            padding: 12px; 
             border: 1px solid #ddd; 
             border-radius: 8px;     
             font-size: 16px;
@@ -89,8 +132,8 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         
-        button {
-            padding: 12px 20px;
+        .input-group button {
+            padding: 12px 24px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -101,7 +144,7 @@
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0,123,255,0.3);
         }
-        button:hover { background-color: #0056b3; transform: translateY(-1px); }
+        .input-group button:hover { background-color: #0056b3; transform: translateY(-1px); }
 
         /* --- HISTORY LIST --- */
         h4 { margin: 0 0 15px 0; font-size: 16px; color: #444; }
@@ -120,161 +163,248 @@
 </head>
 <body>
 
-<div class="main-wrapper">
-    
-    <div class="card">
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="stat-label">Current</div>
-                <div class="stat-value highlight" id="stat-current">--</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Lowest</div>
-                <div class="stat-value" id="stat-min">--</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Highest</div>
-                <div class="stat-value" id="stat-max">--</div>
-            </div>
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>Weight Tracker</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button class="login-btn" onclick="login()">Log In</button>
+            <p id="loginError"></p>
         </div>
-        <canvas id="weightChart"></canvas>
     </div>
 
-    <div class="input-group">
-        <div class="input-wrapper">
-            <label>Date</label>
-            <input type="date" id="inputDate">
-        </div>
-        <div class="input-wrapper">
-            <label>Weight</label>
-            <input type="number" id="inputWeight" placeholder="0.0" step="0.1">
-        </div>
-        <button onclick="saveEntry()">Save</button>
-    </div>
-
-    <div class="card">
-        <h4>Recent History</h4>
-        <ul class="recent-list" id="recentList"></ul>
-    </div>
-
-</div>
-
-<script>
-    // --- 1. DATA ---
-    let data = [
-        { date: '2023-01-01', val: 85.0 },
-        { date: '2023-06-01', val: 82.5 },
-        { date: '2023-09-15', val: 79.0 },
-        { date: '2023-10-01', val: 78.5 },
-        { date: '2023-10-05', val: 77.8 }
-    ];
-
-    // --- 2. INIT ---
-    document.getElementById('inputDate').valueAsDate = new Date();
-    processDataAndRender();
-
-    // --- 3. LOGIC ---
-    function saveEntry() {
-        const dateInput = document.getElementById('inputDate').value;
-        const weightInput = parseFloat(document.getElementById('inputWeight').value);
-
-        if (!dateInput || isNaN(weightInput)) {
-            alert("Please enter valid date and weight");
-            return;
-        }
-
-        const existingIndex = data.findIndex(d => d.date === dateInput);
-        if (existingIndex >= 0) {
-            data[existingIndex].val = weightInput;
-        } else {
-            data.push({ date: dateInput, val: weightInput });
-        }
-
-        document.getElementById('inputWeight').value = ''; 
-        processDataAndRender();
-    }
-
-    function processDataAndRender() {
-        data.sort((a, b) => new Date(a.date) - new Date(b.date));
-        updateStats();
-        drawChart();
-        updateRecentList();
-    }
-
-    function updateStats() {
-        if (data.length === 0) return;
-        const values = data.map(d => d.val);
-        document.getElementById('stat-current').innerText = values[values.length - 1] + " kg";
-        document.getElementById('stat-min').innerText = Math.min(...values) + " kg";
-        document.getElementById('stat-max').innerText = Math.max(...values) + " kg";
-    }
-
-    function updateRecentList() {
-        const listEl = document.getElementById('recentList');
-        listEl.innerHTML = '';
-        const recentItems = data.slice(-5).reverse();
-        recentItems.forEach(item => {
-            const li = document.createElement('li');
-            li.className = 'recent-item';
-            li.innerHTML = `<span class="recent-date">${item.date}</span><span class="recent-val">${item.val} kg</span>`;
-            listEl.appendChild(li);
-        });
-    }
-
-    function drawChart() {
-        const canvas = document.getElementById('weightChart');
-        const ctx = canvas.getContext('2d');
+    <div id="appContainer" class="main-wrapper" style="opacity: 0.1; pointer-events: none; transition: opacity 0.3s;">
         
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+        <div class="card">
+            <div class="header">
+                <h3 style="margin:0;">Dashboard</h3>
+                <button class="logout-link" onclick="logout()">Log Out</button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-label">Current</div>
+                    <div class="stat-value highlight" id="stat-current">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Lowest</div>
+                    <div class="stat-value" id="stat-min">--</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Highest</div>
+                    <div class="stat-value" id="stat-max">--</div>
+                </div>
+            </div>
+            <canvas id="weightChart"></canvas>
+        </div>
+
+        <div class="input-group">
+            <div class="input-wrapper">
+                <label>Date</label>
+                <input type="date" id="inputDate">
+            </div>
+            <div class="input-wrapper">
+                <label>Weight</label>
+                <input type="number" id="inputWeight" placeholder="0.0" step="0.1">
+            </div>
+            <button onclick="saveEntry()">Save</button>
+        </div>
+
+        <div class="card">
+            <h4>Recent History</h4>
+            <ul class="recent-list" id="recentList"></ul>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, query } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+    apiKey: "AIzaSyAEZlBk8z0XPcGN4PMsN9yCCHfw6ZNmH5U",
+    authDomain: "i-64-362c5.firebaseapp.com",
+    projectId: "i-64-362c5",
+    storageBucket: "i-64-362c5.firebasestorage.app",
+    messagingSenderId: "170674723514",
+    appId: "1:170674723514:web:a1303c5a20a99745960083"
+  };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
         
-        const w = canvas.width;
-        const h = canvas.height;
-        const pad = 20;
+        let weightData = [];
+        const COLLECTION_NAME = "weights";
 
-        if (data.length === 0) return;
-
-        const vals = data.map(d => d.val);
-        const maxVal = Math.max(...vals) + 1; 
-        const minVal = Math.min(...vals) - 1;
-        const range = maxVal - minVal;
-
-        // Helper to get coordinates
-        const getX = (i) => pad + (i / (data.length - 1 || 1)) * (w - pad * 2);
-        const getY = (val) => h - pad - ((val - minVal) / range) * (h - pad * 2);
-
-        ctx.clearRect(0, 0, w, h);
-
-        // --- PASS 1: DRAW LINE ---
-        ctx.beginPath();
-        ctx.strokeStyle = '#007bff';
-        ctx.lineWidth = 3; 
-
-        data.forEach((pt, i) => {
-            const x = getX(i);
-            const y = getY(pt.val);
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-
-        // --- PASS 2: DRAW DOTS ---
-        data.forEach((pt, i) => {
-            const x = getX(i);
-            const y = getY(pt.val);
+        // --- AUTH ---
+        window.login = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            document.getElementById('loginError').innerText = "Logging in...";
             
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch((error) => {
+                    document.getElementById('loginError').innerText = error.message;
+                });
+        };
+
+        window.logout = () => {
+            signOut(auth);
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            const overlay = document.getElementById('loginOverlay');
+            const appContainer = document.getElementById('appContainer');
+
+            if (user) {
+                // Logged In: Hide overlay, reveal app
+                overlay.style.display = 'none';
+                appContainer.style.opacity = '1';
+                appContainer.style.pointerEvents = 'auto';
+                
+                document.getElementById('inputDate').valueAsDate = new Date();
+                loadData(); 
+            } else {
+                // Logged Out: Show overlay
+                overlay.style.display = 'flex';
+                appContainer.style.opacity = '0.1';
+                appContainer.style.pointerEvents = 'none';
+                
+                // Clear fields
+                document.getElementById('email').value = "";
+                document.getElementById('password').value = "";
+                document.getElementById('loginError').innerText = "";
+                weightData = [];
+            }
+        });
+
+        // --- DATA ---
+        async function loadData() {
+            weightData = [];
+            const q = query(collection(db, COLLECTION_NAME));
+            
+            try {
+                const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    weightData.push(doc.data());
+                });
+                processDataAndRender();
+            } catch (e) {
+                console.error(e);
+                alert("Database Error: Check console.");
+            }
+        }
+
+        window.saveEntry = async () => {
+            const dateInput = document.getElementById('inputDate').value;
+            const weightInput = parseFloat(document.getElementById('inputWeight').value);
+
+            if (!dateInput || isNaN(weightInput)) {
+                alert("Please enter a valid date and weight");
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, COLLECTION_NAME, dateInput), {
+                    date: dateInput,
+                    val: weightInput
+                });
+                
+                // Optimistic UI update
+                const existingIndex = weightData.findIndex(d => d.date === dateInput);
+                if (existingIndex >= 0) {
+                    weightData[existingIndex].val = weightInput;
+                } else {
+                    weightData.push({ date: dateInput, val: weightInput });
+                }
+
+                document.getElementById('inputWeight').value = '';
+                processDataAndRender();
+                
+            } catch (e) {
+                alert("Save Failed: " + e.message);
+            }
+        };
+
+        // --- RENDER ---
+        function processDataAndRender() {
+            weightData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            updateStats();
+            drawChart();
+            updateRecentList();
+        }
+
+        function updateStats() {
+            if (weightData.length === 0) return;
+            const values = weightData.map(d => d.val);
+            document.getElementById('stat-current').innerText = values[values.length - 1] + " kg";
+            document.getElementById('stat-min').innerText = Math.min(...values) + " kg";
+            document.getElementById('stat-max').innerText = Math.max(...values) + " kg";
+        }
+
+        function updateRecentList() {
+            const listEl = document.getElementById('recentList');
+            listEl.innerHTML = '';
+            const recentItems = weightData.slice(-5).reverse();
+            recentItems.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'recent-item';
+                li.innerHTML = `<span class="recent-date">${item.date}</span><span class="recent-val">${item.val} kg</span>`;
+                listEl.appendChild(li);
+            });
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('weightChart');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            
+            const w = canvas.width;
+            const h = canvas.height;
+            const pad = 20;
+
+            if (weightData.length === 0) return;
+
+            const vals = weightData.map(d => d.val);
+            const maxVal = Math.max(...vals) + 1; 
+            const minVal = Math.min(...vals) - 1;
+            const range = maxVal - minVal;
+
+            const getX = (i) => pad + (i / (weightData.length - 1 || 1)) * (w - pad * 2);
+            const getY = (val) => h - pad - ((val - minVal) / range) * (h - pad * 2);
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Line
             ctx.beginPath();
-            ctx.fillStyle = 'white';
             ctx.strokeStyle = '#007bff';
-            ctx.lineWidth = 2;
-            
-            ctx.arc(x, y, 4, 0, Math.PI * 2); 
-            ctx.fill();   
-            ctx.stroke(); 
-        });
-    }
-    
-    window.addEventListener('resize', drawChart);
-</script>
+            ctx.lineWidth = 3; 
+            weightData.forEach((pt, i) => {
+                const x = getX(i);
+                const y = getY(pt.val);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Dots
+            weightData.forEach((pt, i) => {
+                const x = getX(i);
+                const y = getY(pt.val);
+                ctx.beginPath();
+                ctx.fillStyle = 'white';
+                ctx.strokeStyle = '#007bff';
+                ctx.lineWidth = 2;
+                ctx.arc(x, y, 4, 0, Math.PI * 2); 
+                ctx.fill();   
+                ctx.stroke(); 
+            });
+        }
+
+        window.addEventListener('resize', drawChart);
+    </script>
 </body>
 </html>
