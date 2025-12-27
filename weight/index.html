@@ -54,30 +54,34 @@
             display: block;
         }
 
-        /* --- INPUT FORM --- */
+        /* --- INPUT FORM (THE FIX) --- */
         .input-group {
-            display: flex;
+            /* CSS Grid creates rigid lanes that CANNOT overlap */
+            display: grid;
+            /* Lane 1 (Date): Takes available space */
+            /* Lane 2 (Weight): Takes less space */
+            /* Lane 3 (Button): Takes exactly what it needs */
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
             gap: 10px;
-            margin-bottom: 20px; 
-            align-items: flex-end;
+            margin-bottom: 20px;
+            align-items: end; /* Align bottoms perfectly */
         }
 
-        .input-wrapper-date { flex: 3; min-width: 0; }
-        .input-wrapper-weight { flex: 2; min-width: 0; }
-
-        .input-wrapper-date label, 
-        .input-wrapper-weight label { 
+        .input-wrapper label { 
             display: block; 
             font-size: 12px; 
             margin-bottom: 6px; 
             color: #555; 
             font-weight: 600;
             margin-left: 2px;
+            white-space: nowrap; /* Prevent label wrapping */
         }
         
         input {
             width: 100%;
-            padding: 12px; 
+            /* min-width: 0 is CRITICAL for Grid to force items to shrink */
+            min-width: 0; 
+            padding: 12px 8px; /* Slightly tighter padding for mobile safety */
             border: 1px solid #ddd; 
             border-radius: 8px;     
             font-size: 16px;
@@ -86,7 +90,7 @@
         }
         
         button {
-            padding: 12px 24px;
+            padding: 12px 20px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -94,7 +98,7 @@
             font-weight: bold;
             cursor: pointer;
             height: 45px; 
-            flex: 0 0 auto;
+            white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0,123,255,0.3);
         }
         button:hover { background-color: #0056b3; transform: translateY(-1px); }
@@ -137,11 +141,11 @@
     </div>
 
     <div class="input-group">
-        <div class="input-wrapper-date">
+        <div class="input-wrapper">
             <label>Date</label>
             <input type="date" id="inputDate">
         </div>
-        <div class="input-wrapper-weight">
+        <div class="input-wrapper">
             <label>Weight</label>
             <input type="number" id="inputWeight" placeholder="0.0" step="0.1">
         </div>
@@ -252,7 +256,7 @@
             if (i === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
         });
-        ctx.stroke(); // Draw the connected line now
+        ctx.stroke();
 
         // --- PASS 2: DRAW DOTS ---
         data.forEach((pt, i) => {
@@ -264,9 +268,9 @@
             ctx.strokeStyle = '#007bff';
             ctx.lineWidth = 2;
             
-            ctx.arc(x, y, 4, 0, Math.PI * 2); // Circle radius 4
-            ctx.fill();   // White center
-            ctx.stroke(); // Blue border
+            ctx.arc(x, y, 4, 0, Math.PI * 2); 
+            ctx.fill();   
+            ctx.stroke(); 
         });
     }
     
