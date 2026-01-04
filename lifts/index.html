@@ -1,0 +1,424 @@
+
+<!--
+const firebaseConfig = {
+    apiKey: "AIzaSyDyNu8IBWs_1OVAe5YjHX-fqkCqP0pEm9w",
+    authDomain: "lifts-a561a.firebaseapp.com",
+    projectId: "lifts-a561a",
+    storageBucket: "lifts-a561a.firebasestorage.app",
+    messagingSenderId: "723822207104",
+    appId: "1:723822207104:web:8d0afe680bdcf54c0f0665"
+  };
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Weight">
+
+<meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Gym Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body { background-color: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        /* Table Styling */
+        .table-container { overflow-x: auto; padding-bottom: 90px; }
+        table { width: 100%; border-collapse: collapse; min-width: 100%; }
+        th { background-color: #f1f5f9; color: #64748b; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 8px; font-weight: 600; text-align: center; }
+        td { padding: 14px 8px; text-align: center; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; }
+        tr:last-child td { border-bottom: none; }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 56px; height: 56px;
+            background-color: #2563eb; color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            cursor: pointer; z-index: 40; transition: transform 0.1s;
+        }
+        .fab:active { transform: scale(0.95); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: white; width: 90%; max-width: 400px;
+            border-radius: 12px; padding: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Inputs */
+        input {
+            width: 100%; padding: 10px; margin-top: 4px; margin-bottom: 12px;
+            border: 1px solid #cbd5e1; border-radius: 8px;
+            background: #fff; color: #334155;
+        }
+        input:focus { outline: 2px solid #2563eb; border-color: transparent; }
+
+        /* Auto-Suggest Dropdown Results */
+        #search-results {
+            scrollbar-width: thin;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen" class="fixed inset-0 bg-slate-50 z-50 flex flex-col justify-center items-center p-6">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-100">
+            <h2 class="text-2xl font-bold mb-6 text-center text-slate-800">Pilot's Log</h2>
+            <form id="login-form" class="space-y-4">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition">Log In</button>
+            </form>
+            <p id="login-error" class="text-red-500 text-sm mt-4 text-center hidden"></p>
+        </div>
+    </div>
+
+    <div id="app-screen" class="hidden min-h-screen flex flex-col">
+        
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 py-3 flex gap-3 shadow-sm items-center">
+            <div class="relative flex-1">
+                <div class="flex items-center">
+                    <i class="ri-search-line text-slate-400 mr-2"></i>
+                    <input type="text" id="exercise-search" 
+                        class="w-full font-bold text-lg border-none p-0 m-0 focus:ring-0 placeholder-slate-400 bg-transparent mb-0" 
+                        placeholder="Search Exercise..." 
+                        autocomplete="off">
+                </div>
+                
+                <ul id="search-results" class="hidden absolute top-full left-0 w-full bg-white border border-slate-200 shadow-xl rounded-lg mt-2 max-h-60 overflow-y-auto z-50 divide-y divide-slate-100">
+                    </ul>
+            </div>
+            
+            <button id="logout-btn" class="text-slate-500 text-sm font-medium whitespace-nowrap ml-2">Logout</button>
+        </header>
+
+        <main class="flex-1 max-w-3xl mx-auto w-full">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="w-24">Date</th>
+                            <th class="w-16">Kg</th>
+                            <th>S1</th>
+                            <th>S2</th>
+                            <th>S3</th>
+                            <th>S4</th>
+                            <th class="w-20">Vol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log-table-body"></tbody>
+                </table>
+                <div id="loading" class="text-center py-10 text-slate-400 hidden">Loading data...</div>
+                <div id="empty-state" class="text-center py-10 text-slate-400 hidden">No logs for this exercise.</div>
+            </div>
+        </main>
+
+        <div class="fab" id="fab-add"><i class="ri-add-line text-2xl"></i></div>
+    </div>
+
+    <div id="entry-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-slate-800">Add Entry</h3>
+                <span id="modal-exercise-label" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded"></span>
+            </div>
+            
+            <label class="text-xs font-bold text-slate-500 uppercase">Date</label>
+            <input type="date" id="modal-date">
+
+            <label class="text-xs font-bold text-slate-500 uppercase">Weight (kg)</label>
+            <input type="number" id="modal-kg" placeholder="0" inputmode="decimal">
+
+            <label class="text-xs font-bold text-slate-500 uppercase">Reps (Sets 1-4)</label>
+            <div class="grid grid-cols-4 gap-2">
+                <input type="number" id="modal-r1" placeholder="-" class="text-center" inputmode="numeric">
+                <input type="number" id="modal-r2" placeholder="-" class="text-center" inputmode="numeric">
+                <input type="number" id="modal-r3" placeholder="-" class="text-center" inputmode="numeric">
+                <input type="number" id="modal-r4" placeholder="-" class="text-center" inputmode="numeric">
+            </div>
+
+            <div class="flex gap-3 mt-4">
+                <button id="btn-cancel" class="flex-1 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl">Cancel</button>
+                <button id="btn-save" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-200 hover:bg-blue-700">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ==========================================
+        // TODO: PASTE YOUR FIREBASE CONFIG HERE
+        // ==========================================
+        const firebaseConfig = {
+    apiKey: "AIzaSyDyNu8IBWs_1OVAe5YjHX-fqkCqP0pEm9w",
+    authDomain: "lifts-a561a.firebaseapp.com",
+    projectId: "lifts-a561a",
+    storageBucket: "lifts-a561a.firebasestorage.app",
+    messagingSenderId: "723822207104",
+    appId: "1:723822207104:web:8d0afe680bdcf54c0f0665"
+  };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- EXERCISE LIST (Populate this list!) ---
+        const EXERCISE_LIST = [
+            "Chest - Bench Press",
+            "Chest - inclined dumbell",
+            "Chest - declined press",
+            "Chest - pec fly",
+            "Tri - overhead extension",
+            "Tri - skullcrusher",
+            "Tri - cable pushdown",
+            "Tri - kickback",
+            "Back - upright row",
+            "Back - latt pulldown",
+            "Back - seated row",
+            "Back - lower",
+            "Bicep - curl",
+            "Bicep - reverse grip cable",
+            "Bicep - hammer",
+            "Bicep - preacher curl",
+            "Back - zottman curl",
+            "Leg - Squat",
+            "Leg - lunges",
+            "Leg - extension",
+            "Leg - curl",
+            "Leg - calves",
+            "Shoulder - press",
+            "Shoulder - lateral raise",
+            "Shoulder - front raise",
+            "Shoulder - face pull",
+            "Shoulder - shrug",
+        ];
+
+        // State
+        let allLogs = [];
+        let currentExercise = EXERCISE_LIST[0]; // Default
+
+        // UI References
+        const UI = {
+            loginScreen: document.getElementById('login-screen'),
+            appScreen: document.getElementById('app-screen'),
+            tableBody: document.getElementById('log-table-body'),
+            searchInput: document.getElementById('exercise-search'),
+            searchResults: document.getElementById('search-results'),
+            modal: document.getElementById('entry-modal'),
+            modalLabel: document.getElementById('modal-exercise-label'),
+            modalDate: document.getElementById('modal-date'),
+            loading: document.getElementById('loading'),
+            empty: document.getElementById('empty-state')
+        };
+
+        // Init Search Box
+        UI.searchInput.value = currentExercise;
+
+        // --- AUTH ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                UI.loginScreen.classList.add('hidden');
+                UI.appScreen.classList.remove('hidden');
+                fetchData();
+            } else {
+                UI.loginScreen.classList.remove('hidden');
+                UI.appScreen.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            signInWithEmailAndPassword(auth, email, password).catch(err => alert(err.message));
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+
+        // --- SEARCH & FILTER LOGIC ---
+        function filterDropdown(query) {
+            const matches = EXERCISE_LIST.filter(ex => 
+                ex.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            UI.searchResults.innerHTML = '';
+            matches.forEach(ex => {
+                const li = document.createElement('li');
+                li.className = "px-4 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-medium";
+                li.textContent = ex;
+                li.onmousedown = () => selectExercise(ex); // mousedown fires before blur
+                UI.searchResults.appendChild(li);
+            });
+
+            if (matches.length > 0) {
+                UI.searchResults.classList.remove('hidden');
+            } else {
+                UI.searchResults.classList.add('hidden');
+            }
+        }
+
+        function selectExercise(name) {
+            UI.searchInput.value = name;
+            currentExercise = name;
+            UI.searchResults.classList.add('hidden');
+            renderTable();
+        }
+
+        // Search Events
+        UI.searchInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            filterDropdown(val);
+            
+            // Auto-select if exact match
+            const exactMatch = EXERCISE_LIST.find(ex => ex.toLowerCase() === val.toLowerCase());
+            if (exactMatch) {
+                currentExercise = exactMatch;
+                renderTable();
+            }
+        });
+
+        UI.searchInput.addEventListener('focus', () => filterDropdown(UI.searchInput.value));
+        
+        // "Snap Back" Logic on Blur
+        UI.searchInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                const val = UI.searchInput.value;
+                const match = EXERCISE_LIST.find(ex => ex.toLowerCase() === val.toLowerCase());
+                
+                if (match) {
+                    UI.searchInput.value = match; // Case correction
+                } else {
+                    UI.searchInput.value = currentExercise; // Revert to valid state
+                }
+                UI.searchResults.classList.add('hidden');
+            }, 200);
+        });
+
+        // --- DATA LOGIC ---
+        async function fetchData() {
+            UI.loading.classList.remove('hidden');
+            UI.tableBody.innerHTML = ''; 
+            try {
+                const snapshot = await getDocs(collection(db, "workout_logs"));
+                allLogs = [];
+                snapshot.forEach(doc => allLogs.push(doc.data()));
+                renderTable();
+            } catch (e) {
+                console.error(e);
+                alert("Load failed");
+            } finally {
+                UI.loading.classList.add('hidden');
+            }
+        }
+
+        function renderTable() {
+            UI.tableBody.innerHTML = '';
+            
+            const logs = allLogs
+                .filter(l => l.exercise === currentExercise)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (logs.length === 0) {
+                UI.empty.classList.remove('hidden');
+                return;
+            }
+            UI.empty.classList.add('hidden');
+
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-mono text-slate-600 font-bold">${formatDate(log.date)}</td>
+                    <td class="font-bold text-slate-900">${log.kg}</td>
+                    <td class="text-slate-500">${log.reps1 || '-'}</td>
+                    <td class="text-slate-500">${log.reps2 || '-'}</td>
+                    <td class="text-slate-500">${log.reps3 || '-'}</td>
+                    <td class="text-slate-500">${log.reps4 || '-'}</td>
+                    <td class="text-xs font-mono text-blue-600 font-bold">${log.volume}</td>
+                `;
+                UI.tableBody.appendChild(tr);
+            });
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
+        }
+
+        // --- MODAL & SAVE ---
+        document.getElementById('fab-add').addEventListener('click', () => {
+            // Set defaults
+            UI.modalDate.valueAsDate = new Date();
+            UI.modalLabel.textContent = currentExercise;
+            document.getElementById('modal-kg').value = '';
+            document.getElementById('modal-r1').value = '';
+            document.getElementById('modal-r2').value = '';
+            document.getElementById('modal-r3').value = '';
+            document.getElementById('modal-r4').value = '';
+            
+            UI.modal.classList.add('open');
+        });
+
+        document.getElementById('btn-cancel').addEventListener('click', () => {
+            UI.modal.classList.remove('open');
+        });
+
+        document.getElementById('btn-save').addEventListener('click', async () => {
+            const date = UI.modalDate.value;
+            const kg = parseFloat(document.getElementById('modal-kg').value);
+            
+            if (!date || !kg) { alert("Date and Weight are required"); return; }
+
+            const r1 = parseFloat(document.getElementById('modal-r1').value) || 0;
+            const r2 = parseFloat(document.getElementById('modal-r2').value) || 0;
+            const r3 = parseFloat(document.getElementById('modal-r3').value) || 0;
+            const r4 = parseFloat(document.getElementById('modal-r4').value) || 0;
+            const volume = kg * (r1 + r2 + r3 + r4);
+
+            const entry = {
+                date, exercise: currentExercise, kg,
+                reps1: r1 || null, reps2: r2 || null, reps3: r3 || null, reps4: r4 || null,
+                volume
+            };
+
+            const docId = `${date}_${currentExercise.replace(/\s+/g, '_')}`;
+            const btn = document.getElementById('btn-save');
+            btn.textContent = "Saving...";
+
+            try {
+                await setDoc(doc(db, "workout_logs", docId), entry);
+                
+                // Update local state (remove old version of this day if exists, then add new)
+                allLogs = allLogs.filter(l => !(l.date === date && l.exercise === currentExercise));
+                allLogs.push(entry);
+                
+                renderTable();
+                UI.modal.classList.remove('open');
+            } catch (e) {
+                console.error(e);
+                alert("Save failed");
+            } finally {
+                btn.textContent = "Save";
+            }
+        });
+    </script>
+</body>
+</html>
