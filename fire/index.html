@@ -240,6 +240,13 @@
         const retireY = parseInt(document.getElementById('retireYears').value) || 0;
         const contrib = parseFloat(document.getElementById('monthlyContrib').value) || 0;
         const withdraw = parseFloat(document.getElementById('monthlyWithdraw').value) || 0;
+        // 12.5% tax => you get 87.5% of withdrawal
+        // so if you want to withdraw x,
+        // you need to withdraw y=x+t (where t = tax)
+        // y = x + t
+        // t = 0.125y, x = 0.875y
+        // y = x/0.875
+        withdraw = withdraw / 0.875;
         const rateInput = parseFloat(document.getElementById('returnRate').value) || 0;
 
         let monthlyRate = compoundMode === 'yearly' ? Math.pow(1 + (rateInput / 100), 1/12) - 1 : rateInput / 100;
