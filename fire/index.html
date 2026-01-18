@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Value FIRE Calculator (₹)</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --primary: #2563eb;
+            --invest: #22c55e15; /* Transparent green */
+            --coast: #eab30815;  /* Transparent yellow */
+            --retire: #3b82f615; /* Transparent blue */
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            max-width: 1250px;
+            width: 100%;
+        }
+
+        .sidebar {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            height: fit-content;
+        }
+
+        .main-content {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        h2 { margin-top: 0; font-size: 1.25rem; color: var(--primary); }
+        .section-title { font-weight: bold; margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: #64748b; }
+        input[type="number"] { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+
+        .helper-box {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+
+        .stat-value { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .badge { padding: 2px 8px; border-radius: 4px; color: white; font-size: 0.7rem; }
+        .bg-invest { background: #22c55e; }
+        .bg-coast { background: #eab308; }
+        .bg-retire { background: #3b82f6; }
+
+        .toggle-container {
+            display: flex;
+            background: #eee;
+            border-radius: 6px;
+            padding: 2px;
+            margin-bottom: 15px;
+        }
+        .toggle-container button {
+            flex: 1;
+            border: none;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        .toggle-container button.active { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <h2>₹ FIRE Calculator</h2>
+        <p style="font-size: 0.8rem; color: #64748b;">All numbers represent <b>Real Worth</b> today.</p>
+
+        <div class="input-group">
+            <label>Current Portfolio (₹)</label>
+            <input type="number" id="startBalance" value="20000000" oninput="update()">
+        </div>
+
+        <div class="section-title"><span class="badge bg-invest">PHASE 1</span> Invest</div>
+        <div class="input-group">
+            <label>Years Investing</label>
+            <input type="number" id="investYears" value="12" oninput="update()">
+        </div>
+        <div class="input-group">
+            <label>Monthly Contribution (₹)</label>
+            <input type="number" id="monthlyContrib" value="310000" oninput="update()">
+        </div>
+
+        <div class="section-title"><span class="badge bg-coast">PHASE 2</span> Coast</div>
+        <div class="input-group">
+            <label>Years Coasting</label>
+            <input type="number" id="coastYears" value="6" oninput="update()">
+        </div>
+
+        <div class="section-title"><span class="badge bg-retire">PHASE 3</span> Retire</div>
+        <div class="input-group">
+            <label>Years in Retirement</label>
+            <input type="number" id="retireYears" value="30" oninput="update()">
+        </div>
+        <div class="input-group">
+            <label>Monthly Withdrawal (₹)</label>
+            <input type="number" id="monthlyWithdraw" value="100000" oninput="update()">
+        </div>
+
+        <hr style="border: 0.5px solid #e2e8f0; margin: 20px 0;">
+
+        <div class="section-title">Real Return Rate</div>
+        <div class="toggle-container">
+            <button id="btnYearly" class="active" onclick="setCompounding('yearly')">Yearly Comp.</button>
+            <button id="btnMonthly" onclick="setCompounding('monthly')">Monthly Comp.</button>
+        </div>
+
+        <div class="input-group">
+            <label id="rateLabel">Annual Real Return (%)</label>
+            <input type="number" id="returnRate" value="5.66" step="0.1" oninput="update()">
+        </div>
+
+        <div class="helper-box">
+            <label style="color: var(--text); font-weight: bold; font-size: 0.85rem;">Inflation Adjustment Helper</label>
+            <div style="display: flex; gap: 5px; margin-top: 8px;">
+                <input type="number" id="nomRate" placeholder="Nominal %" style="width: 50%; font-size: 0.75rem;" oninput="calcReal()">
+                <input type="number" id="inflRate" placeholder="Inflation %" style="width: 50%; font-size: 0.75rem;" oninput="calcReal()">
+            </div>
+            <div id="realResult" style="font-size: 0.8rem; margin-top: 10px; color: var(--primary); font-weight: bold;">
+                Real Return: 0%
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="results-grid">
+            <div class="stat-card" style="border-color: #22c55e;">
+                <div class="stat-label">Peak Corpus (Real)</div>
+                <div class="stat-value" id="statPeak">₹0</div>
+            </div>
+            <div class="stat-card" style="border-color: #3b82f6;">
+                <div class="stat-label">Final Balance</div>
+                <div class="stat-value" id="statFinal">₹0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Compounding Applied</div>
+                <div class="stat-value" id="statRate">0%</div>
+            </div>
+        </div>
+
+        <div style="height: 450px; position: relative;">
+            <canvas id="fireChart"></canvas>
+        </div>
+        
+        <div style="display: flex; gap: 20px; justify-content: center; margin-top: 10px; font-size: 0.75rem; font-weight: bold;">
+            <span style="color: #22c55e">■ INVESTING</span>
+            <span style="color: #eab308">■ COASTING</span>
+            <span style="color: #3b82f6">■ RETIREMENT</span>
+        </div>
+        
+        <p style="color: #64748b; font-size: 0.85rem; margin-top: 25px; line-height: 1.6; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+            <b>Indian System:</b> Values on the chart are in <b>Crores (Cr)</b>. The numbering system used is <b>Lakhs/Crores</b>. 
+            All projections ignore nominal inflation and focus purely on what your money can buy in today's market.
+        </p>
+    </div>
+</div>
+
+<script>
+    let compoundMode = 'yearly';
+    let chart;
+
+    const formatINR = (num) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0
+        }).format(Math.round(num));
+    };
+
+    function setCompounding(mode) {
+        compoundMode = mode;
+        document.getElementById('btnYearly').classList.toggle('active', mode === 'yearly');
+        document.getElementById('btnMonthly').classList.toggle('active', mode === 'monthly');
+        document.getElementById('rateLabel').innerText = mode === 'yearly' ? 'Annual Real Return (%)' : 'Monthly Real Return (%)';
+        update();
+    }
+
+    function calcReal() {
+        const nom = parseFloat(document.getElementById('nomRate').value) || 0;
+        const infl = parseFloat(document.getElementById('inflRate').value) || 0;
+        const real = (((1 + nom/100) / (1 + infl/100)) - 1) * 100;
+        document.getElementById('realResult').innerText = `Real Return: ${real.toFixed(2)}%`;
+        if (real !== 0 && !isNaN(real)) {
+            document.getElementById('returnRate').value = real.toFixed(2);
+            update();
+        }
+    }
+
+    function update() {
+        const startBalance = parseFloat(document.getElementById('startBalance').value) || 0;
+        const investY = parseInt(document.getElementById('investYears').value) || 0;
+        const coastY = parseInt(document.getElementById('coastYears').value) || 0;
+        const retireY = parseInt(document.getElementById('retireYears').value) || 0;
+        const contrib = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+        const withdraw = parseFloat(document.getElementById('monthlyWithdraw').value) || 0;
+        const rateInput = parseFloat(document.getElementById('returnRate').value) || 0;
+
+        let monthlyRate = compoundMode === 'yearly' ? Math.pow(1 + (rateInput / 100), 1/12) - 1 : rateInput / 100;
+
+        let balance = startBalance;
+        let labels = [];
+        let values = [];
+        let peak = 0;
+        const totalYears = investY + coastY + retireY;
+
+        for (let m = 0; m <= totalYears * 12; m++) {
+            if (m > 0) {
+                if (m <= investY * 12) balance = (balance * (1 + monthlyRate)) + contrib;
+                else if (m <= (investY + coastY) * 12) balance = (balance * (1 + monthlyRate));
+                else balance = (balance * (1 + monthlyRate)) - withdraw;
+            }
+            if (balance > peak) peak = balance;
+            if (m % 12 === 0) {
+                labels.push(m / 12);
+                values.push(Math.max(0, balance / 10000000));
+            }
+            if (balance < -500000) break;
+        }
+
+        document.getElementById('statPeak').innerText = formatINR(peak);
+        document.getElementById('statFinal').innerText = formatINR(Math.max(0, balance));
+        document.getElementById('statRate').innerText = rateInput + '%';
+
+        renderChart(labels, values, investY, coastY, totalYears);
+    }
+
+    function renderChart(labels, values, investY, coastY, totalYears) {
+        const ctx = document.getElementById('fireChart').getContext('2d');
+        if (chart) chart.destroy();
+
+        // Custom plugin for phase backgrounds
+        const phaseBgPlugin = {
+            id: 'phaseBg',
+            beforeDraw: (chart) => {
+                const { ctx, chartArea, scales: { x, y } } = chart;
+                const drawPhase = (startYear, endYear, color) => {
+                    const left = x.getPixelForValue(startYear);
+                    const right = x.getPixelForValue(endYear);
+                    ctx.fillStyle = color;
+                    ctx.fillRect(left, chartArea.top, right - left, chartArea.bottom - chartArea.top);
+                };
+                drawPhase(0, investY, '#22c55e15');
+                drawPhase(investY, investY + coastY, '#eab30815');
+                drawPhase(investY + coastY, totalYears, '#3b82f615');
+            }
+        };
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            plugins: [phaseBgPlugin],
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    borderColor: '#3b82f6',
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.1,
+                    pointRadius: 1,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                scales: {
+                    x: { title: { display: true, text: 'Time (Years)' }, grid: { display: false } },
+                    y: { 
+                        beginAtZero: true, 
+                        title: { display: true, text: 'Crores (Real Value)' },
+                        ticks: { callback: v => v + ' Cr' } 
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => `Year ${items[0].label}`,
+                            label: (item) => `Portfolio: ${item.parsed.y.toFixed(2)} Cr`
+                        }
+                    }
+                }
+            }
+        });
+    }
+    update();
+</script>
+</body>
+</html>
